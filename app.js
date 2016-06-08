@@ -2,6 +2,7 @@ var fs = require('fs');
 var ejs = require('ejs');
 var http = require('http');
 var express = require('express');
+var path = require('path');
 
 var client = require('mysql').createConnection({
 	user: 'root',
@@ -14,6 +15,7 @@ var app = express();
 // var ckStaticsPath = require('node-ckeditor');
 app.use(express.bodyParser());
 app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.statics(ckStaticsPath));
 
 
@@ -28,11 +30,9 @@ app.get('/', function (request, response) {
 	})
 })
 
-app.get('/ckeditor', function (request, response) {
-	fs.readFile('ckeditor/samples/index.html', 'utf8', function (error, data){
-		response.send(data);
-	})
-})
+// function Product(name, image, price, count) {
+
+// }
 
 // app.post('/', function (request, response) {
 // 	fs.readFile('HTMLPage.html', 'utf8', function (error, data){
