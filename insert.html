@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Administrator Insert Page</title>
+	<!-- <script src="./ckeditor/ckeditor.js"></script> -->
+    <!-- TODO : Need to launch the api from the local drive. -->
+    <script src="//cdn.ckeditor.com/4.5.9/standard/ckeditor.js"></script>
+    <!-- Visit http://ckeditor.com/ for more information. -->
+</head>
+<body>
+	<h1>Administrator Insert Page</h1>
+	<hr />
+	<form method="post">
+		<fieldset>
+			<table>
+				<tr>
+                    <td><label>Category</label></td>
+                    <td>
+                        <input type="radio" name="category" value="humor" checked> humor
+                        <input type="radio" name="category" value="celebrity"> celebrity
+    					<input type="radio" name="category" value="politics"> politics
+					</td>
+				</tr>	
+				<tr>
+					<td><label>Title</label></td>
+					<td><input type="text" name="title" maxlength="50" size="115"></td>
+				</tr>
+				<tr>
+					<td><label>Contents</label></td>
+					<td>
+                    <form>
+                        <textarea name="contents" id="editor1" rows="10" cols="80">
+                            This is my textarea to be replaced with CKEditor.
+                        </textarea>
+                        <script>
+                            // Replace the <textarea id="editor1"> with a CKEditor instance, using default configuration.
+                            CKEDITOR.replace( 'editor1' );
+                        </script>
+                    </form>
+                    </td>
+				</tr>
+				<tr>
+                    <!-- TODO : Need to do input validation on server side to check whether the password is correct. -->
+					<td><label>Password</label></td>
+					<td><input type="password" name="password" maxlength="50" size="50"></td>
+				</tr>				
+			</table>
+			<input type="submit" />
+		</fieldset>
+	</form>
+</body>
+</html>
