@@ -35,7 +35,7 @@
 	padding:10px;
 }
 #footer {
-	background-color:#494949;
+	background-color:#333;
 	color:white;
 	clear:both;
 	text-align:center;
@@ -133,7 +133,8 @@ caption {
 	float: left;
 	margin-top: 10px;
 }
-input[type=text] {
+
+input[type=text1] {
     width: 130px;
     box-sizing: border-box;
     border: 2px solid #ccc;
@@ -141,17 +142,18 @@ input[type=text] {
     font-size: 16px;
     background-color: white;
     background-image: url('http://i.imgur.com/vvbSbFD.png');
-    background-size: 25px 25px;
+    background-size:25px 25px;
     background-position: 10px 10px; 
     background-repeat: no-repeat;
     padding: 12px 20px 12px 40px;
     -webkit-transition: width 0.4s ease-in-out;
     transition: width 0.4s ease-in-out;
+    
 }
 
-input[type=text]:focus {
+input[type=text1]:focus {
     width: 100%;
-}
+   }
 
 .paging .hide {
 	display:block; height: 0; width: 0; font-szie: 0; line-height: 0; margin:0; padding: 0; overflow:hidden;
@@ -162,11 +164,10 @@ input[type=text]:focus {
  .paging a {
  	display:inline-block; width:23px; height:23px; padding-top:2px; vertical-align:middle;
  }
- .paging a:hover {text-decoration:underline;}
- .paging .btn_arr{text-decoration:none;}
- .paging .btn_arr, .paging .on {marging:0 3px; padding-top:0; border :1px solid #ddd;}
- .paging .on{padding-top:1px; height:22px; color:#fff; font-weight:bold; background:#000;}
-
+.paging a:hover {text-decoration:none;}
+.paging .btn_arr{text-decoration:none;}
+.paging .btn_arr, .paging .on {marging:0 3px; padding-top:0; border :1px solid #ddd;}
+.paging .on{  height:22px; color:#fff; font-weight:bold; background:#000;}
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
@@ -183,6 +184,75 @@ input[type=text]:focus {
 		<li><a href= "#Contact">연예</a></li>
 		<li><a href= "#about">정치</a></li>
 		<li><a href= "#about">동물</a></li>
+		
+</div>
+
+<div class="container">
+	<hr/>
+	<div class="row">
+		<div class="col-md-10">
+			<table class="table table-dondensed">
+				<thead>
+					<tr align="center">
+						<th width="10%">제목</th>
+						<th width="60%">게시판 제목입니다.</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>작성일
+							</td>
+							<td>
+							2016-06-07
+							</td>
+						</tr>
+					<tr>
+						<td>글쓴이
+						</td>
+						<td>coco<span style='float:right'>조회: 0</span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<img src = "file:///Users/MINKU/Desktop/coco.jpg" width=50% height=50%>
+							<p>This is a sample test.</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+<table id="commentTable" class="table table-condensed"></table>
+<table class="table table-condensed">
+	<tr>
+		<td>
+			<span class ="form-inline" role="form">
+				<p>
+					<div class="form-group">
+						<input type="text" id="commentParentName" name="commentParentName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">
+                                            <input type="password" id="commentParentPassword" name="commentParentPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="button" id="commentParentSubmit" name="commentParentSubmit" class="btn btn-default">확인</button>
+                                        </div>
+                                    </p>
+                                        <textarea id="commentParentText" class="form-control col-lg-12" style="width:100%" rows="4"></textarea>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <span style='float:right'>
+                                        <button type="button" id="list" class="btn btn-default">목록</button>
+                                        <button type="button" id="modify" class="btn btn-default">수정</button>
+                                        <button type="button" id="delete" class="btn btn-default">삭제</button>
+                                        <button type="button" id="write" class="btn btn-default">글쓰기</button>
+                                    </span>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
 </div>
 
 <div id="section">
@@ -211,7 +281,7 @@ input[type=text]:focus {
 	 <tr>
 	 	<td class="num">1555</td>
 	 	<td class="title">
-	 	<a href="file:///Users/MINKU/Desktop/index2.html">I don't know what to say here</a>
+	 	<a href="#">I don't know what to say here</a>
 	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
 	 	</td>
 	 	<td>coco</td>
@@ -349,16 +419,17 @@ input[type=text]:focus {
 	 		<td class="num">100</td>
 	 	</tr>
 	 </tbody>
-</table><br>
+</table>
+<br>
 
 <form>
-  <input type="text" name="search" placeholder="Search..">
+  <input type="text1" name="search" placeholder="Search..">
 </form><br>
 
 <div class="paging"> 
 	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
 	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
-	<a href="#" class="on">1</a>
+	<a href="#"class="on">1</a>
     <a href="#">2</a>
 	<a href="#">3</a>
 	<a href="#">4</a>
