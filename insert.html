@@ -26,7 +26,7 @@
 				<tr>
 					<td><label>Contents</label></td>
 					<td>
-                    <form>
+                    <!-- form>
                         <textarea name="contents" id="editor1" rows="10" cols="80">
                             This is my textarea to be replaced with CKEditor.
                         </textarea>
@@ -34,7 +34,15 @@
                             // Replace the <textarea id="editor1"> with a CKEditor instance, using default configuration.
                             CKEDITOR.replace( 'editor1' );
                         </script>
-                    </form>
+                    </form> -->
+                    <div id="sample">
+                        <script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script> <script type="text/javascript">
+                        //<![CDATA[
+                        bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+                        //]]>
+                        </script>
+                        <textarea name="contents" cols="150" rows="30"></textarea>
+                    </div>
                     </td>
 				</tr>
 				<tr>
