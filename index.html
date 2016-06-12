@@ -187,6 +187,41 @@ input[type=text]:focus {
 
 <div id="section">
 <table class="table_list" summary="게시판" cellspacing="0">
+	<colgroup>
+	<col width="8%" />
+	<col width="*" />
+	<col width="13%" />
+	<col width="13%" />
+	<col width="13%" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th scope="col">번호</th>
+			<th scope="col">제목</th>
+			<th scope="col">작성자</th>
+			<th scope="col">작성일</th>
+			<th scope="col">조회수</th>
+			<th scope="col">추천수</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% data.forEach(function (item, index){%>
+		<tr>
+			<td class="num"><%item.id%></td>
+		 	<td class="title">
+		 	<a href="index2.html"><%item.title%></a>
+		 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
+		 	</td>
+		 	<td>admin</td>
+		 	<td class="num"><%item.date%></td>
+		 	<td class="num"><%item.inquiry_num%></td>
+		 	<td class="num"><%item.like_num%></td>
+	 	</tr>
+		<% });%>
+	</tbody>
+
+</table>
+<table class="table_list" summary="게시판" cellspacing="0">
 	<caption>
 	
 	</caption>
@@ -211,7 +246,7 @@ input[type=text]:focus {
 	 <tr>
 	 	<td class="num">1555</td>
 	 	<td class="title">
-	 	<a href="file:///Users/MINKU/Desktop/index2.html">I don't know what to say here</a>
+	 	<a href="index2.html">I don't know what to say here</a>
 	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
 	 	</td>
 	 	<td>coco</td>
