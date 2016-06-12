@@ -22,20 +22,19 @@ server.listen(52273, '0.0.0.0', function(){
 	console.log('Server running at http://0.0.0.0:52273');
 });
 
-var counter = 0;
-function Post(id, title, contents){
-	this.id = id;
-	this.title = title;
-	this.contents = contents;
-}
-
 app.get('/', function (request, response) {
-	fs.readFile('index.html', 'utf8', function (error, data){
-		client.query('SELECT * FROM bbs', function (error, results){
-			// console.log(response.render('title', {itmes : rows}));
-			response.send(ejs.render(data, {data: results}));
-		});
-		// response.send(data);
+	fs.readFile('index.ejs', 'utf8', function (error, data){
+		if(error){
+			console.log('index.ejs file does not exist.');
+		}else{
+			client.query('SELECT * FROM bbs', function (error, results){
+				if(error){
+					console.log('Fetching data (SELECT * FROM bbs) is unavailable.');
+				}else{
+					response.send(ejs.render(data, {data: results}));	
+				}
+			});
+		}
 	});
 });
 
