@@ -37,9 +37,7 @@ app.get('/', function (request, response) {
 						}else{
 							response.send(ejs.render(data, {data: results}));
 							if (data_num > 20){
-								var page_num = data_num / 20;
-								console.log(page_num);
-								
+								var page_num = Math.ceil(data_num / 20);
 								response.send(ejs.render(page_num, {page_num: page_num}));
 							}
 						}
