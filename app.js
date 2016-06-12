@@ -14,8 +14,6 @@ var client = require('mysql').createConnection({
 var app = express();
 app.use(express.bodyParser());
 app.use(app.router);
-// Set the path for ckeditor asset
-// app.use(express.static(path.join(__dirname, 'public')));
 
 var server = http.createServer(app);
 server.listen(52273, '0.0.0.0', function(){
@@ -25,13 +23,27 @@ server.listen(52273, '0.0.0.0', function(){
 app.get('/', function (request, response) {
 	fs.readFile('index.ejs', 'utf8', function (error, data){
 		if(error){
-			console.log('index.ejs file does not exist.');
+			console.log('index.ejs file either does not exist or is crashed.');
 		}else{
-			client.query('SELECT * FROM bbs', function (error, results){
-				if(error){
-					console.log('Fetching data (SELECT * FROM bbs) is unavailable.');
+			var data_num = 0;
+			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
+				if (error){
+					console.log('Could not count the data rows from the database');
 				}else{
-					response.send(ejs.render(data, {data: results}));	
+					data_num = results[0].count;
+					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+						if(error){
+							console.log('Fetching data from the database is unavailable');
+						}else{
+							response.send(ejs.render(data, {data: results}));
+							if (data_num > 20){
+								var page_num = data_num / 20;
+								console.log(page_num);
+								
+								response.send(ejs.render(page_num, {page_num: page_num}));
+							}
+						}
+					});
 				}
 			});
 		}
