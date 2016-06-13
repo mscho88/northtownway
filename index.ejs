@@ -393,6 +393,23 @@ input[type=text]:focus {
 </form><br>
 
 <div class="paging"> 
+
+	<% if (page_num.item.page_num != 1) {
+		page_num.forEach(function (item, index){ 	
+			%>
+			<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
+			<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
+			<a href="#"> 1 </a>
+			<a href="#" class="btn_arr next"><span class="hide">다음 페이지</span></a>
+			<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>
+			<%
+		})
+	}else{
+		%> <a href="#" class="on">1</a> <%
+	} %>
+
+	
+
 	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
 	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
 	<a href="#" class="on">1</a>

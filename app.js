@@ -36,10 +36,9 @@ app.get('/', function (request, response) {
 							console.log('Fetching data from the database is unavailable');
 						}else{
 							response.send(ejs.render(data, {data: results}));
-							if (data_num > 20){
-								var page_num = Math.ceil(data_num / 20);
-								response.send(ejs.render(page_num, {page_num: page_num}));
-							}
+							var page_num = Math.ceil(data_num / 20);
+							response.send(ejs.render(page_num, {page_num: page_num}));
+							res.json({ pages: page_num });
 						}
 					});
 				}
