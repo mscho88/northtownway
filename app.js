@@ -15,6 +15,10 @@ var app = express();
 app.use(express.bodyParser());
 app.use(app.router);
 
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+
 var server = http.createServer(app);
 server.listen(52273, '0.0.0.0', function(){
 	console.log('Server running at http://0.0.0.0:52273');
@@ -35,10 +39,14 @@ app.get('/', function (request, response) {
 						if(error){
 							console.log('Fetching data from the database is unavailable');
 						}else{
-							response.send(ejs.render(data, {data: results}));
-							var page_num = Math.ceil(data_num / 20);
-							response.send(ejs.render(page_num, {page_num: page_num}));
-							res.json({ pages: page_num });
+							var pages = Math.ceil(data_num / 20);
+							response.send(ejs.render(data, {data: results, page_num: pages}));
+							// var page_num = Math.ceil(data_num / 20);
+
+							// response.on(page_num);
+							// res.json({ pages: page_num });
+							// response.render('index', {page_num : true});
+							// ejs.render('index', {page_num : page_num})
 						}
 					});
 				}
