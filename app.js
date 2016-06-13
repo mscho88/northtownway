@@ -2,8 +2,6 @@ var fs = require('fs');
 var ejs = require('ejs');
 var http = require('http');
 var express = require('express');
-// var path = require('path');
-// var format = require('date-format');
 
 var client = require('mysql').createConnection({
 	user: 'root',
@@ -17,7 +15,6 @@ app.use(app.router);
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-
 
 var server = http.createServer(app);
 server.listen(52273, '0.0.0.0', function(){
@@ -41,12 +38,6 @@ app.get('/', function (request, response) {
 						}else{
 							var pages = Math.ceil(data_num / 20);
 							response.send(ejs.render(data, {data: results, page_num: pages}));
-							// var page_num = Math.ceil(data_num / 20);
-
-							// response.on(page_num);
-							// res.json({ pages: page_num });
-							// response.render('index', {page_num : true});
-							// ejs.render('index', {page_num : page_num})
 						}
 					});
 				}
@@ -65,11 +56,10 @@ app.post('/insert', function (request, response) {
 	var body = request.body;
 
 	var currentdate = new Date(); 
-	var datetime = currentdate.getFullYear() + "-" + currentdate.getDate() + "-" + (currentdate.getMonth()+1)  + " "
+	var datetime = currentdate.getFullYear() + "-" + currentdate.getMonth() + 1 + "-" + (currentdate.getDate())  + " "
 				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
-	console.log(datetime)
-	// console.log(response.end(JSON.stringify(request.files) + "\n"));
+	console.log(body + datetime);
 	client.query('INSERT INTO bbs (category, title, is_new, inquiry_num, like_num, contents, time) values (?, ?, ?, ?, ?, ?, ?)',
 		[body.category, body.title, 1, 0, 0, body.contents, datetime],
 		function () {
