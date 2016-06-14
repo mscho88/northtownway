@@ -76,6 +76,7 @@ app.get('/post/:id', function (request, response){
 	});
 });
 
+// new commment
 app.get('/insert', function (request, response) {
 	fs.readFile('insert.html', 'utf8', function (error, data) {
 		response.send(data);
