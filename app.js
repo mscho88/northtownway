@@ -46,6 +46,36 @@ app.get('/', function (request, response) {
 	});
 });
 
+app.get('/post/:id', function (request, response){
+	fs.readFile('post.ejs', 'utf8', function (error, data){
+		if(error){
+			console.log('post.ejs file either does not exist or is crashed.');
+		}else{
+			var data_num = 0;
+			
+			client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
+				if (error){
+					console.log('Could not fetch the data from the database');
+				}else{
+					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+
+					response.send(ejs.render(data, {data: results, post: apost[0]}));
+					// data_num = results[0].count;
+					// client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+					// 	if(error){
+					// 		console.log('Fetching data from the database is unavailable');
+					// 	}else{
+					// 		var pages = Math.ceil(data_num / 20);
+					// 		response.send(ejs.render(data, {data: results, page_num: pages}));
+					// 	}
+					// });
+					});
+				}
+			});
+		}
+	});
+});
+
 app.get('/insert', function (request, response) {
 	fs.readFile('insert.html', 'utf8', function (error, data) {
 		response.send(data);
@@ -56,10 +86,12 @@ app.post('/insert', function (request, response) {
 	var body = request.body;
 
 	var currentdate = new Date(); 
-	var datetime = currentdate.getFullYear() + "-" + currentdate.getMonth() + 1 + "-" + (currentdate.getDate())  + " "
+	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
 				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
-	console.log(body + datetime);
+	console.log("Body : ");
+	console.log(body);
+	console.log("Date and Time" + datetime);
 	client.query('INSERT INTO bbs (category, title, is_new, inquiry_num, like_num, contents, time) values (?, ?, ?, ?, ?, ?, ?)',
 		[body.category, body.title, 1, 0, 0, body.contents, datetime],
 		function () {
