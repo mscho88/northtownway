@@ -202,6 +202,27 @@
 </table> -->
 
 
+
+
+	<%
+		if (cur_page == 1){
+			# current page is first page that the client is firstly entered
+			if (pages > 1) { 
+				for(var i = 0; i < pages; i++){
+					if (cur_page == i + 1){
+						%> <b> <%= i + 1 %></b><%
+					}else{ %> 
+						<a href="/page=<%= i + 1 %>"> <%= i + 1 %></a><%
+					}
+				}
+			}else{ %> 
+				<b> 1 </b>
+			<%
+			} %>
+		}else{
+
+		}
+	%>
 <!--	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
 	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
 	<a href="#" class="on">1</a>

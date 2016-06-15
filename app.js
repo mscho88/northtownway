@@ -23,30 +23,60 @@ server.listen(52273, '0.0.0.0', function(){
 
 app.get('/', function (request, response) {
 	fs.readFile('index.ejs', 'utf8', function (error, data){
+		var data_num = 0;
+		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
+			data_num = results[0].count;
+			client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+				response.send(ejs.render(data, {data: results, cur_page: 1, pages: Math.ceil(data_num / 20)}));
+			});
+		});
+	});
+});
+
+app.get('/page=:page&post=:id', function (request, response){
+	fs.readFile('post.ejs', 'utf8', function (error, data){
 		if(error){
-			console.log('index.ejs file either does not exist or is crashed.');
+			console.log('post.ejs file either does not exist or is crashed.');
 		}else{
-			var data_num = 0;
-			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
-				if (error){
-					console.log('Could not count the data rows from the database');
+			client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * 20, request.param('page') * 20], function (error, results){
+				if(error){
+					console.log('Fetching data from the database is unavailable');
 				}else{
-					data_num = results[0].count;
-					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-						if(error){
-							console.log('Fetching data from the database is unavailable');
+					var data_num = 0;
+			
+					client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
+						if (error){
+							console.log('Could not fetch the data from the database');
 						}else{
-							var pages = Math.ceil(data_num / 20);
-							response.send(ejs.render(data, {data: results, page_num: pages}));
+							client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+								response.send(ejs.render(data, {data: results, post: apost[0]}));
+							});
 						}
 					});
+					response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: request.param('page')}));
 				}
 			});
 		}
 	});
 });
 
-app.get('/post/:id', function (request, response){
+app.get('/page=:page', function (request, response){
+	fs.readFile('index.ejs', 'utf8', function (error, data){
+		if (request.param('page') == 1){
+			response.redirect('/');
+		}else{
+			var data_num = 0;
+			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
+				data_num = results[0].count;
+				client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * 20, request.param('page') * 20], function (error, results){
+					response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: Math.ceil(data_num / 20)}));
+				});
+			});
+		}
+	});
+});
+
+app.get('/post=:id', function (request, response){
 	fs.readFile('post.ejs', 'utf8', function (error, data){
 		if(error){
 			console.log('post.ejs file either does not exist or is crashed.');
@@ -58,17 +88,7 @@ app.get('/post/:id', function (request, response){
 					console.log('Could not fetch the data from the database');
 				}else{
 					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-
-					response.send(ejs.render(data, {data: results, post: apost[0]}));
-					// data_num = results[0].count;
-					// client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-					// 	if(error){
-					// 		console.log('Fetching data from the database is unavailable');
-					// 	}else{
-					// 		var pages = Math.ceil(data_num / 20);
-					// 		response.send(ejs.render(data, {data: results, page_num: pages}));
-					// 	}
-					// });
+						response.send(ejs.render(data, {data: results, post: apost[0]}));
 					});
 				}
 			});

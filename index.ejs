@@ -32,15 +32,16 @@
 #section {
 	width:100%;
 	float:left;
-	padding:10px;
+	padding:1cm 3cm;
 }
 #footer {
-	background-color:#494949;
+	background-color:#262626;
 	color:white;
 	clear:both;
 	text-align:center;
 	padding:5px;
 	position: relative;
+	width:100%;
 
 }
 
@@ -160,12 +161,35 @@ input[type=text]:focus {
 	padding:19px; text-align:center;
  }
  .paging a {
- 	display:inline-block; width:23px; height:23px; padding-top:2px; vertical-align:middle;
+ 	float:center;
+ 	padding: 4px;
+ 	margin-right:3px;
+ 	width:15px;
+ 	color:#000;
+ 	font:bold 12px helvetica;
+ 	border:1px solid #eee;
+ 	text-align: center;
+ 	text-decoration:none;
  }
- .paging a:hover {text-decoration:underline;}
+ .paging a:hover {
+ 	color:#fff;
+ 	border:1px solid #f40;
+ 	background-color:#f40;
+ }
  .paging .btn_arr{text-decoration:none;}
- .paging .btn_arr, .paging .on {marging:0 3px; padding-top:0; border :1px solid #ddd;}
- .paging .on{padding-top:1px; height:22px; color:#fff; font-weight:bold; background:#000;}
+ .paging .btn_arr, .paging .on {
+ 	margin:0 3px; 
+ 	padding-top:0; 
+ 	border :1px solid #ddd;
+ }
+ .paging .on {
+ 	padding-top:1px; 
+ 	height:22px; 
+ 	color:#000; 
+ 	font-weight:bold; 
+ 	background:#111;
+ }
+
 
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -211,7 +235,7 @@ input[type=text]:focus {
 			<tr>
 				<td class="num"><%= item.id %></td>
 			 	<td class="title">
-				 	<a href="/post/<%= item.id %>"><%= item.title %></a>
+				 	<a href="/post=<%= item.id %>"><%= item.title %></a>
 				 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
 			 	</td>
 			 	<td>IRICOM</td>
@@ -233,14 +257,31 @@ input[type=text]:focus {
 	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
 	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
 		
-	<% if (page_num != 1) { 
-		for(var i = 0; i < page_num; i++){
-			%> <a href="#"> <%= i + 1 %></a><%
+	<%
+		if (cur_page == 1){
+			if (pages > 1){ 
+				for (var i = 1; i <= pages; i++){
+					if (cur_page == i){
+						%> <b> <%= i %></b><%
+					}else{ %> 
+						<a href="/page=<%= i %>"> <%= i %></a><%
+					}
+				}
+			}else{ %> 
+				<b> 1 </b>
+			<%
+			}
+		}else{
+			for (var i = 1; i <= pages; i++){
+				if (cur_page == i){
+					%> <b> <%= i %></b><%
+				}else{ %> 
+					<a href="/page=<%= i %>"> <%= i %></a><%
+				}
+			}
 		}
 	%>
-	<% }else{ %> 
-		<a href="#"> 1 </a>
-	<% } %>
+
 	<a href="#" class="btn_arr next"><span class="hide">다음 페이지</span></a>
 	<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>	
 </div>
