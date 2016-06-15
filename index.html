@@ -32,15 +32,16 @@
 #section {
 	width:100%;
 	float:left;
-	padding:10px;
+	padding:1cm 3cm;
 }
 #footer {
-	background-color:#494949;
+	background-color:#262626;
 	color:white;
 	clear:both;
 	text-align:center;
 	padding:5px;
 	position: relative;
+	width:100%;
 
 }
 
@@ -160,12 +161,35 @@ input[type=text]:focus {
 	padding:19px; text-align:center;
  }
  .paging a {
- 	display:inline-block; width:23px; height:23px; padding-top:2px; vertical-align:middle;
+ 	float:center;
+ 	padding: 4px;
+ 	margin-right:3px;
+ 	width:15px;
+ 	color:#000;
+ 	font:bold 12px helvetica;
+ 	border:1px solid #eee;
+ 	text-align: center;
+ 	text-decoration:none;
  }
- .paging a:hover {text-decoration:underline;}
+ .paging a:hover {
+ 	color:#fff;
+ 	border:1px solid #f40;
+ 	background-color:#f40;
+ }
  .paging .btn_arr{text-decoration:none;}
- .paging .btn_arr, .paging .on {marging:0 3px; padding-top:0; border :1px solid #ddd;}
- .paging .on{padding-top:1px; height:22px; color:#fff; font-weight:bold; background:#000;}
+ .paging .btn_arr, .paging .on {
+ 	margin:0 3px; 
+ 	padding-top:0; 
+ 	border :1px solid #ddd;
+ }
+ .paging .on {
+ 	padding-top:1px; 
+ 	height:22px; 
+ 	color:#000; 
+ 	font-weight:bold; 
+ 	background:#111;
+ }
+
 
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -186,205 +210,44 @@ input[type=text]:focus {
 </div>
 
 <div id="section">
-<table class="table_list" summary="게시판" cellspacing="0">
-	<colgroup>
-	<col width="8%" />
-	<col width="*" />
-	<col width="13%" />
-	<col width="13%" />
-	<col width="13%" />
-	</colgroup>
-	<thead>
-		<tr>
-			<th scope="col">번호</th>
-			<th scope="col">제목</th>
-			<th scope="col">작성자</th>
-			<th scope="col">작성일</th>
-			<th scope="col">조회수</th>
-			<th scope="col">추천수</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% data.forEach(function (item, index){%>
-		<tr>
-			<td class="num"><%item.id%></td>
-		 	<td class="title">
-		 	<a href="index2.html"><%item.title%></a>
-		 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-		 	</td>
-		 	<td>admin</td>
-		 	<td class="num"><%item.date%></td>
-		 	<td class="num"><%item.inquiry_num%></td>
-		 	<td class="num"><%item.like_num%></td>
-	 	</tr>
-		<% });%>
-	</tbody>
+	<table class="table_list" summary="게시판" cellspacing="0">
+		<colgroup>
+			<col width="8%" />
+			<col width="*" />
+			<col width="5%" />
+			<col width="10%" />
+			<col width="5%" />
+			<col width="5%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th scope="col">번호</th>
+				<th scope="col">제목</th>
+				<th scope="col">작성자</th>
+				<th scope="col">작성일</th>
+				<th scope="col">조회수</th>
+				<th scope="col">추천수</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<% data.forEach(function (item, index){ %>
+			<tr>
+				<td class="num"><%= item.id %></td>
+			 	<td class="title">
+				 	<a href="/post=<%= item.id %>"><%= item.title %></a>
+				 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
+			 	</td>
+			 	<td>IRICOM</td>
+			 	<td class="num"><%= item.time %></td>
+			 	<td class="num"><%= item.inquiry_num %></td>
+			 	<td class="num"><%= item.like_num %></td>
+		 	</tr>
+			<% });%>
+		</tbody>
+	</table>
+</div>
 
-</table>
-<table class="table_list" summary="게시판" cellspacing="0">
-	<caption>
-	
-	</caption>
-	<colgroup>
-	<col width="8%" />
-	<col width="*" />
-	<col width="13%" />
-	<col width="13%" />
-	<col width="13%" />
-	</colgroup>
-	<thead>
-		<tr>
-			<th scope="col">번호</th>
-			<th scope="col">제목</th>
-			<th scope="col">작성자</th>
-			<th scope="col">작성일</th>
-			<th scope="col">조회수</th>
-			<th scope="col">추천수</th>
-		</tr>
-	</thead>
-	<tbody>
-	 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="index2.html">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 		 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="#">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 		 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="#">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 		 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="#">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 		 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="#">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 		 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="#">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 		 <tr>
-	 	<td class="num">1555</td>
-	 	<td class="title">
-	 	<a href="#">I don't know what to say here</a>
-	 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
-	 	</td>
-	 	<td>coco</td>
-	 	<td class="num">1,555</td>
-	 	<td class="num">2016-06-07</td>
-	 	<td class="num">100</td>
-	 	</tr>
-	 	<tr>
-	 		<td class="num">1555</td>
-	 		<td class="title"><a href="#">...</a>
-	 		</td>
-	 		<td>faf</td>
-	 		<td class="num">1,555</td>
-	 		<td class="num">2016-06-07</td>
-	 		<td class="num">100</td>
-	 	</tr>
-	 </tbody>
-</table><br>
 
 <form>
   <input type="text" name="search" placeholder="Search..">
@@ -393,17 +256,38 @@ input[type=text]:focus {
 <div class="paging"> 
 	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
 	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
-	<a href="#" class="on">1</a>
-    <a href="#">2</a>
-	<a href="#">3</a>
-	<a href="#">4</a>
-	<a href="#">5</a>
+		
+	<%
+		if (cur_page == 1){
+			if (pages > 1){ 
+				for (var i = 1; i <= pages; i++){
+					if (cur_page == i){
+						%> <b> <%= i %></b><%
+					}else{ %> 
+						<a href="/page=<%= i %>"> <%= i %></a><%
+					}
+				}
+			}else{ %> 
+				<b> 1 </b>
+			<%
+			}
+		}else{
+			for (var i = 1; i <= pages; i++){
+				if (cur_page == i){
+					%> <b> <%= i %></b><%
+				}else{ %> 
+					<a href="/page=<%= i %>"> <%= i %></a><%
+				}
+			}
+		}
+	%>
+
 	<a href="#" class="btn_arr next"><span class="hide">다음 페이지</span></a>
-	<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>
+	<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>	
 </div>
 
 <div id="footer">
-Copyright &copy; INDEXPAGE.com
+Copyright &copy; IRICOM.com
 </div>
 
 </head>

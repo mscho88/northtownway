@@ -22,7 +22,7 @@ server.listen(52273, '0.0.0.0', function(){
 });
 
 app.get('/', function (request, response) {
-	fs.readFile('index.ejs', 'utf8', function (error, data){
+	fs.readFile('index.html', 'utf8', function (error, data){
 		var data_num = 0;
 		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
 			data_num = results[0].count;
@@ -34,7 +34,7 @@ app.get('/', function (request, response) {
 });
 
 app.get('/page=:page&post=:id', function (request, response){
-	fs.readFile('post.ejs', 'utf8', function (error, data){
+	fs.readFile('post.html', 'utf8', function (error, data){
 		if(error){
 			console.log('post.ejs file either does not exist or is crashed.');
 		}else{
@@ -61,7 +61,7 @@ app.get('/page=:page&post=:id', function (request, response){
 });
 
 app.get('/page=:page', function (request, response){
-	fs.readFile('index.ejs', 'utf8', function (error, data){
+	fs.readFile('index.html', 'utf8', function (error, data){
 		if (request.param('page') == 1){
 			response.redirect('/');
 		}else{
@@ -77,7 +77,7 @@ app.get('/page=:page', function (request, response){
 });
 
 app.get('/post=:id', function (request, response){
-	fs.readFile('post.ejs', 'utf8', function (error, data){
+	fs.readFile('post.html', 'utf8', function (error, data){
 		if(error){
 			console.log('post.ejs file either does not exist or is crashed.');
 		}else{
