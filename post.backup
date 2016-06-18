@@ -1,0 +1,508 @@
+<!Doctype HTML>
+<meta charset="utf-8" />
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="./bootsrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+	<!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
+	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<style>
+#header {
+	
+	color:#cccccc;
+	padding:5px;
+	text-align:center;
+}
+#header1 {
+	background-color:#404040;
+	color:#cccccc;
+	padding:5px;
+	text-align:center;
+}
+#nav {
+	line-height:30px;
+	background-color:#eeeeee;
+	height:300px;
+	width:100px;
+	float:left;
+	padding:5px;
+}
+#section {
+	width:100%;
+	float:left;
+	
+}
+#footer {
+	background-color:#262626;
+	color:white;
+	clear:both;
+	text-align:center;
+	padding:5px;
+	position: relative;
+
+}
+
+a.serif {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	text-align:middle;
+	position: relative;
+	left: 50px;
+}
+body {
+    margin: 0;
+}
+
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+
+caption {
+	font-family:helvetica;
+	color: black;
+	font-weight: bold;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+.table_list {
+	font-family:helvetica;
+	width: 100%;
+	font-size: 12px;
+}
+.table_list thead tr th {
+	height: 35px;
+	background: #494949;
+	color: #fff;
+	font-weight: bold;
+}
+.table_list tbody tr td {
+	line-height: 35px;
+	border-bottom: 1px solid #c3c3c3;
+	text-align: center;
+}
+.table_list tbody tr td.num {
+	font-family: Helvetica;
+	font-size: 11px;
+	color: #737373;
+
+}
+.table_list tbody tr td.title {
+	text-align: left;
+}
+.table_list tbody tr td.title a {
+	display:block;
+	float:left;
+	text-decoration: none;
+	color: #191919;
+	max-width:320px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.table_list tbody tr td.title a:hover {
+	text-decoration: underline;
+}
+.table_list tbody tr td.title img {
+	display: block;
+	float: left;
+	margin-top: 10px;
+}
+
+input[type=text1] {
+    width: 130px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('http://i.imgur.com/vvbSbFD.png');
+    background-size:25px 25px;
+    background-position: 10px 10px; 
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 40px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+    
+}
+
+input[type=text1]:focus {
+    width: 100%;
+   }
+
+.paging { 
+	padding:19px; text-align:center;
+ }
+ .paging a {
+ 	float:center;
+ 	padding: 4px;
+ 	margin-right:3px;
+ 	width:15px;
+ 	color:#000;
+ 	font:bold 12px helvetica;
+ 	border:1px solid #eee;
+ 	text-align: center;
+ 	text-decoration:none;
+ }
+ .paging a:hover {
+ 	color:#fff;
+ 	border:1px solid #f40;
+ 	background-color:#f40;
+ }
+ .paging .btn_arr{text-decoration:none;}
+ .paging .btn_arr, .paging .on {
+ 	margin:0 3px; 
+ 	padding-top:0; 
+ 	border :1px solid #ddd;
+ }
+ .paging .on {
+ 	padding-top:1px; 
+ 	height:22px; 
+ 	color:#000; 
+ 	font-weight:bold; 
+ 	background:#111;
+ }
+
+
+.container {
+	padding: 1cm 2cm;
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<body>
+
+<div id="header">
+<h1>IRICOM</h1>
+</div>
+
+<div id="header1">
+	<ul> 
+		<li><a class="active" href= "#home">전체보기</a></li>
+		<li><a href="#news">유머</a></li>
+		<li><a href= "#Contact">연예</a></li>
+		<li><a href= "#about">정치</a></li>
+		<li><a href= "#about">동물</a></li>
+		
+</div>
+
+<div class="container">
+	<hr/>
+	<div class="row">
+		<div class="col-md-10">
+			<table class="table table-dondensed">
+				<thead>
+					<tr align="center">
+						<th width="10%">제목</th>
+						<th width="60%"> <%= post.title %></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>작성일
+							</td>
+							<td>
+							<%= post.time %>
+							</td>
+						</tr>
+					<tr>
+						<td>글쓴이
+						</td>
+						<td>IRICOM<span style='float:right'>조회: <%= post.inquiry_num %></span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<!-- <img src = "file:///Users/MINKU/Desktop/coco.jpg" width=50% height=50%> -->
+							<p><%- post.contents %></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+<table id="commentTable" class="table table-condensed"></table>
+<table class="table table-condensed">
+                        <tr>
+                            <td>
+                                <span class="form-inline" role="form">
+                                    <p>
+                                        <div class="form-group">
+                                            <input type="text" id="commentParentName" name="commentParentName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" id="commentParentPassword" name="commentParentPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">
+                                        </div>
+                                   
+                                    </p>
+                                        <textarea id="commentParentText" class="form-control col-lg-12" style="width:100%" rows="4"></textarea>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <td>
+                                    <span style='float:right'>
+                                         <div class="form-group">
+                                            <button type="button" id="commentParentSubmit" name="commentParentSubmit" class="btn btn-default">확인</button>
+                                        </div>
+                                    </span>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <script>
+   
+                        $(function(){
+                            $("#commentParentSubmit").click(function( event ) {
+                                var pName = $("#commentParentName");
+                                var pPassword = $("#commentParentPassword");
+                                var pText = $("#commentParentText");
+                                   
+                                if($.trim(pName.val())==""){
+                                    alert("이름을 입력하세요.");
+                                    pName.focus();
+                                    return;
+                                }else if($.trim(pPassword.val())==""){
+                                    alert("패스워드를 입력하세요.");
+                                    pPassword.focus();
+                                    return;
+                                }else if($.trim(pText.val())==""){
+                                    alert("내용을 입력하세요.");
+                                    pText.focus();
+                                    return;
+                                }
+                                   
+                                var commentParentText = '<tr id="r1" name="commentParentCode">'+
+                                                            '<td colspan=2>'+
+                                                                '<strong>'+pName.val()+'</strong> '+pPassword.val()+' <a style="cursor:pointer;" name="pAdd">답글</a> | <a style="cursor:pointer;" name="pDel">삭제</a><p>'+pText.val().replace(/\n/g, "<br>")+'</p>'+
+                                                            '</td>'+
+                                                        '</tr>';
+                                if($('#commentTable').contents().size()==0){
+                                    $('#commentTable').append(commentParentText);
+                                }else{
+                                    $('#commentTable tr:last').after(commentParentText);
+                                }
+                                   
+                                $("#commentParentName").val("");
+                                $("#commentParentPassword").val("");
+                                $("#commentParentText").val("");
+                                   
+                            });
+                            $(document).on("click","#commentChildSubmit", function(){
+                                   
+                                var cName = $("#commentChildName");
+                                var cPassword = $("#commentChildPassword");
+                                var cText = $("#commentChildText");
+                                   
+                                if($.trim(cName.val())==""){
+                                    alert("이름을 입력하세요.");
+                                    cName.focus();
+                                    return;
+                                }else if($.trim(cPassword.val())==""){
+                                    alert("패스워드를 입력하세요.");
+                                    cPassword.focus();
+                                    return;
+                                }else if($.trim(cText.val())==""){
+                                    alert("내용을 입력하세요.");
+                                    cText.focus();
+                                    return;
+                                }  
+                                var commentChildText = '<tr name="commentChildCode">'+
+                                                            '<td style="width:1%"><span class="glyphicon glyphicon-arrow-right"></span></td>'+
+                                                            '<td style="width:99%">'+
+                                                                '<strong>'+cName.val()+'</strong> '+cPassword.val()+' <a style="cursor:pointer;" name="cAdd">답글</a> | <a style="cursor:pointer;" name="cDel">삭제</a>'+
+                                                                '<p>'+cText.val().replace(/\n/g, "<br>")+'</p>'+
+                                                            '</td>'+
+                                                        '</tr>';
+                                                           
+                                
+                                var prevTr = $(this).parent().parent().parent().parent().prev();
+                               
+                                $("#commentEditor").remove();
+                                while(prevTr.attr("name")!="commentParentCode"){
+                                    prevTr = prevTr.prev();
+                                }
+                                var check = false;
+                                var nextTr = prevTr.next();
+                                if(nextTr.attr("name")!="commentChildCode"){
+                                    prevTr.after(commentChildText);
+                                }else{
+                                    
+                                    while(nextTr.attr("name")=="commentChildCode"){
+                                        nextTr = nextTr.next();
+                                        check = true;
+                                    }
+                                }
+                                   
+                                if(check){
+                                    nextTr = nextTr.prev();
+                                    nextTr.after(commentChildText);
+                                }
+                                   
+                            });
+                            
+                            $(document).on("click","table#commentTable a", function(){
+                                   
+                                if($(this).attr("name")=="pDel"){
+                                    if (confirm("답글을 삭제 하시면 밑에 답글도 모두 삭제 됩니다. 정말 삭제하시겠습니까?") == true){    
+                                           
+                                        var delComment = $(this).parent().parent();
+                                        var nextTr = delComment.next();
+                                        var delTr;
+                                        
+                                        while(nextTr.attr("name")=="commentCode"){
+                                            nextTr = nextTr.next();
+                                            delTr = nextTr.prev();
+                                            delTr.remove();
+                                        }
+                                           
+                                        delComment.remove();
+                                           
+                                    }else{   
+                                        return;
+                                    }
+                                }else if($(this).attr("name")=="cDel"){
+                                    if (confirm("정말 삭제하시겠습니까??") == true){    
+                                        $(this).parent().parent().remove();
+                                    }else{   
+                                        return;
+                                    }
+                                }else{
+                                    
+                                    var parentElement = $(this).parent().parent();
+                                    
+                                    $("#commentEditor").remove();
+                                    
+                                    var commentEditor = '<tr id="commentEditor">'+
+                                                            '<td style="width:1%"> </td>'+
+                                                            '<td>'+
+                                                                '<span class="form-inline" role="form">'+
+                                                                    '<p>'+
+                                                                        '<div class="form-group">'+
+                                                                            '<input type="text" id="commentChildName" name="commentChildName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">'+
+                                                                        '</div>'+
+                                                                        '<div class="form-group">'+
+                                                                            ' <input type="password" id="commentChildPassword" name="commentChildPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">'+
+                                                                        '</div>'+
+                                                                        '<div class="form-group">'+
+                                                                            '<button type="button" id="commentChildSubmit" class="btn btn-default">확인</button>'+
+                                                                        '</div>'+
+                                                                    '</p>'+
+                                                                        '<textarea id="commentChildText" name="commentChildText" class="form-control" style="width:98%" rows="4"></textarea>'+
+                                                                '</span>'+
+                                                            '</td>'+
+                                                        '</tr>';
+                                                           
+                                    parentElement.after(commentEditor); 
+                                }
+                                   
+                            });
+                               
+                            $( "#list" ).click(function( event ) {
+                                location.href='/community/notice';
+                            });
+                            $( "#modify" ).click(function( event ) {
+                                location.href='/community/modify/notice/${community.id}';
+                            });
+                            $( "#delete" ).click(function( event ) {
+                                location.href='/community/delete/notice/${community.id}';
+                            });
+                            $( "#write" ).click(function( event ) {
+                                location.href='/community/notice/edit';
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+            <hr/>
+</div>
+
+<div id="section">
+	<table class="table_list" summary="게시판" cellspacing="0">
+		<colgroup>
+			<col width="8%" />
+			<col width="*" />
+			<col width="5%" />
+			<col width="10%" />
+			<col width="5%" />
+			<col width="5%" />
+		</colgroup>
+		<thead>
+			<tr>
+				<th scope="col">번호</th>
+				<th scope="col">제목</th>
+				<th scope="col">작성자</th>
+				<th scope="col">작성일</th>
+				<th scope="col">조회수</th>
+				<th scope="col">추천수</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<% data.forEach(function (item, index){ %>
+			<tr>
+				<td class="num"><%= item.id %></td>
+			 	<td class="title">
+				 	<a href="/post=<%= item.id %>"><%= item.title %></a>
+				 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
+			 	</td>
+			 	<td>IRICOM</td>
+			 	<td class="num"><%= item.time %></td>
+			 	<td class="num"><%= item.inquiry_num %></td>
+			 	<td class="num"><%= item.like_num %></td>
+		 	</tr>
+			<% });%>
+		</tbody>
+	</table>
+</div>
+
+<form>
+  <input type="text1" name="search" placeholder="Search..">
+</form><br>
+
+<div class="paging"> 
+	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
+	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
+	<a href="#"class="on">1</a>
+    <a href="#">2</a>
+	<a href="#">3</a>
+	<a href="#">4</a>
+	<a href="#">5</a>
+	<a href="#" class="btn_arr next"><span class="hide">다음 페이지</span></a>
+	<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>
+</div>
+
+<div id="footer">
+Copyright &copy; INDEXPAGE.com
+</div>
+
+</head>
+</body>
+</html>

@@ -61,28 +61,63 @@ app.get('/page=:page&post=:id', function (request, response){
 });
 
 app.get('/page=:page', function (request, response){
-	fs.readFile('index.html', 'utf8', function (error, data){
-		if (request.param('page') == 1){
-			response.redirect('/');
-		}else{
-			var data_num = 0;
+	if (request.param('page') == -1){
+		fs.readFile('index.html', 'utf8', function (error, data){
 			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
-				data_num = results[0].count;
-				client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * 20, request.param('page') * 20], function (error, results){
-					response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: Math.ceil(data_num / 20)}));
-				});
+				var page_num = Math.ceil(results[0].count / 20);
+				if (page_num == 1){
+					response.redirect('/');
+				}else{
+					// var data_num = results[0].count % 20;
+					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(page_num - 1) * 20, page_num * 20], function (error, results){
+						response.send(ejs.render(data, {data: results, cur_page: page_num, pages: page_num}));
+					});
+				}
 			});
-		}
-	});
+		});
+	}else if (request.param('page') > 0){
+		fs.readFile('index.html', 'utf8', function (error, data){
+			if (request.param('page') == 1){
+				response.redirect('/');
+			}else{
+				var data_num = 0;
+				client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
+					data_num = results[0].count;
+					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * 20, request.param('page') * 20], function (error, results){
+						response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: Math.ceil(data_num / 20)}));
+					});
+				});
+			}
+		});
+	}else{
+		response.redirect('/');
+	}
 });
 
 app.get('/post=:id', function (request, response){
+	client.query('SELECT COUNT(*) as count FROM user_info WHERE ip = ? && bbs_id = ?', [request.connection.remoteAddress, request.param('id')], function (error, results){
+		if (results[0].count == 0){
+			client.query('INSERT INTO user_info (ip, bbs_id) VALUES (?, ?)', [request.connection.remoteAddress, request.param('id')], function (error, results){
+				if(error){
+					console.log('Failed to sync to the database server');
+				}else{
+					client.query('UPDATE bbs SET inquiry_num = inquiry_num + 1 WHERE id = ?', [request.param('id')], function (error, result){
+						if(error){
+							console.log('Failed to increase the number of inquiry for the post id = %d', request.param('id'));
+						}else{
+							console.log('Succeeded to increase the number of inquiry for the post id = %d', request.param('id'));
+						}
+					});
+				}
+			});
+		}
+	});
+
 	fs.readFile('post.html', 'utf8', function (error, data){
 		if(error){
 			console.log('post.ejs file either does not exist or is crashed.');
 		}else{
 			var data_num = 0;
-			
 			client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
 				if (error){
 					console.log('Could not fetch the data from the database');

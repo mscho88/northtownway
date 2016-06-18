@@ -155,7 +155,7 @@ input[type=text]:focus {
 }
 
 .paging .hide {
-	display:block; height: 0; width: 0; font-szie: 0; line-height: 0; margin:0; padding: 0; overflow:hidden;
+	
 }
 .paging { 
 	padding:19px; text-align:center;
@@ -239,51 +239,85 @@ input[type=text]:focus {
 				 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
 			 	</td>
 			 	<td>IRICOM</td>
-			 	<td class="num"><%= item.time %></td>
+			 	<td class="num"><%
+			 	var month = item.time.getMonth() + 1;
+			 	if (month < 10){
+			 		month = '0' + month;
+			 	}
+
+			 	var date = item.time.getDate();
+			 	if (date < 10){
+			 		date = '0' + date;
+			 	}
+			 	%>
+			 	<%=
+			 	item.time.getFullYear() + "-" + month + "-" + date %></td>
+			 	<!-- TODO : Need to change the time format to YYYY-mm-dd -->
 			 	<td class="num"><%= item.inquiry_num %></td>
 			 	<td class="num"><%= item.like_num %></td>
 		 	</tr>
 			<% });%>
 		</tbody>
 	</table>
+	<br>	
+	<form>
+  		<input type="text" name="search" placeholder="Search..">
+	</form>
 </div>
 
-
-<form>
-  <input type="text" name="search" placeholder="Search..">
-</form><br>
+<br>
 
 <div class="paging"> 
-	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
-	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
+	<a href="/page=1" class="btn_arr first"><span class="hide"><<</span></a>
+
+	<%
+	if (cur_page > 1) {
+		%> <a href="/page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide"><</span></a> <%
+	}else{
+		%> <a href="/page=1%>" class="btn_arr prev"><span class="hide"><</span></a> <%
+	}
+	%>
 		
 	<%
-		if (cur_page == 1){
-			if (pages > 1){ 
-				for (var i = 1; i <= pages; i++){
-					if (cur_page == i){
-						%> <b> <%= i %></b><%
-					}else{ %> 
-						<a href="/page=<%= i %>"> <%= i %></a><%
-					}
-				}
-			}else{ %> 
-				<b> 1 </b>
-			<%
-			}
-		}else{
-			for (var i = 1; i <= pages; i++){
+		var max_pages = 9;
+		if (pages < 9){
+			max_pages = pages;
+		}
+		
+		if (pages == 0){
+			max_pages = 1;
+		}
+		
+		if (cur_page <= 5){
+			for (var i = 1; i <= max_pages; i++){
 				if (cur_page == i){
 					%> <b> <%= i %></b><%
 				}else{ %> 
 					<a href="/page=<%= i %>"> <%= i %></a><%
 				}
 			}
+		}else{
+			if (cur_page >= 6){
+				for (var i = cur_page - 4; i < cur_page; i++){
+					%> <a href="/page=<%= i %>"> <%= i %></a><% 
+				}
+				%> <b> <%= cur_page %></b><%
+				for (var i = ++cur_page; i < cur_page + 4; i++){
+					%> <a href="/page=<%= i %>"> <%= i %></a><% 
+				}
+			}
 		}
+		
 	%>
 
-	<a href="#" class="btn_arr next"><span class="hide">다음 페이지</span></a>
-	<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>	
+	<%
+	if (cur_page > 1) {
+		%> <a href="/page=<%= ++cur_page %>" class="btn_arr next"><span class="hide">></span></a> <%
+	}else{
+		%> 	<a href="/page=1" class="btn_arr next"><span class="hide">></span></a> <%
+	}
+	%>
+	<a href="/page=-1" class="btn_arr last"><span class="hide">>></span></a>	
 </div>
 
 <div id="footer">
