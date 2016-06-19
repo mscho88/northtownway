@@ -104,6 +104,7 @@ app.get('/page=:page', function (request, response){
 });
 
 app.get('/post=:id', function (request, response){
+	// Increase the number of inquiry on the selected post and save the inquiry number for each ip address.
 	client.query('SELECT COUNT(*) as count FROM user_info WHERE ip = ? && bbs_id = ?', [request.connection.remoteAddress, request.param('id')], function (error, results){
 		if (results[0].count == 0){
 			client.query('INSERT INTO user_info (ip, bbs_id) VALUES (?, ?)', [request.connection.remoteAddress, request.param('id')], function (error, results){
@@ -131,8 +132,12 @@ app.get('/post=:id', function (request, response){
 				if (error){
 					console.log('Could not fetch the data from the database');
 				}else{
-					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-						response.send(ejs.render(data, {data: results, post: apost[0]}));
+					client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
+						var data_num = results[0].count;
+
+						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+							response.send(ejs.render(data, {data: results, post: apost[0], cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+						});
 					});
 				}
 			});
@@ -164,3 +169,9 @@ app.post('/insert', function (request, response) {
 	});
 });
 
+app.post('/', function (request, response) {
+	console.log(request.body.search);
+	fs.readFile('index.html', 'utf8', function (error, data) {
+		
+	});
+});

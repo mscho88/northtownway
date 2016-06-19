@@ -216,35 +216,38 @@ input[type=text1]:focus {
 	<hr/>
 	<div class="row">
 		<div class="col-md-10">
-			<table class="table table-dondensed">
-				<thead>
-					<tr align="center">
-						<th width="10%">제목</th>
-						<th width="60%"> <%= post.title %></th>
+            <table class="table table-dondensed">
+                <thead>
+                    <tr align="center">
+                        <th colspan="2"> <%= post.title %></th>
                     </tr>
-				</thead>
-					<tbody>
-						<tr>
-							<td>작성일
-							</td>
-							<td>
-							<%= post.time.getFullYear() + "-" + (post.time.getMonth() + 1) + "-" +post.time.getDate() + " " + post.time.getHours() + ":" + post.time.getMinutes() + ":" + post.time.getSeconds() %>
-							</td>
-						</tr>
+                </thead>
+            </table>
+            <hr/>
+			<table class="table table-dondensed">
+				<tbody>
 					<tr>
-						<td>글쓴이
+						<td>작성일
 						</td>
-						<td>IRICOM<span style='float:right'>조회: <%= post.inquiry_num %></span>
+						<td>
+						<%= post.time.getFullYear() + "-" + (post.time.getMonth() + 1) + "-" +post.time.getDate() + " " + post.time.getHours() + ":" + post.time.getMinutes() + ":" + post.time.getSeconds() %>
+						</td>
+					</tr>
+					<tr>
+						<td>조회
+						</td>
+						<td><span ><%= post.inquiry_num %></span>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">
-							<!-- <img src = "file:///Users/MINKU/Desktop/coco.jpg" width=50% height=50%> -->
 							<p><%- post.contents %></p>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+            <hr/>
+
 <table id="commentTable" class="table table-condensed"></table>
 <table class="table table-condensed">
     <tr>
@@ -325,15 +328,78 @@ input[type=text1]:focus {
 </form><br>
 
 <div class="paging"> 
-	<a href="#" class="btn_arr first"><span class="hide">처음 페이지</span></a>
-	<a href="#" class="btn_arr prev"><span class="hide">이전 페이지</span></a>
-	<a href="#"class="on">1</a>
-    <a href="#">2</a>
-	<a href="#">3</a>
-	<a href="#">4</a>
-	<a href="#">5</a>
-	<a href="#" class="btn_arr next"><span class="hide">다음 페이지</span></a>
-	<a href="#" class="btn_arr last"><span class="hide">마지막 페이지</span></a>
+	<a href="/page=1" class="btn_arr first"><span class="hide"><<</span></a>
+
+    <%
+    if (cur_page > 1) {
+        %> <a href="/page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide"><</span></a> <%
+    }else{
+        %> <a href="/page=1%>" class="btn_arr prev"><span class="hide"><</span></a> <%
+    }
+    %>
+        
+    <%
+        var max_pages = 9;
+        if (parseInt(pages) < 9){
+            max_pages = parseInt(pages);
+        }
+        
+        if (parseInt(pages) == 0){
+            max_pages = 1;
+        }
+        
+        if (parseInt(cur_page) <= 5){
+            for (var i = 1; i <= max_pages; i++){
+                if (parseInt(cur_page) == i){
+                    %> <b> <%= i %></b><%
+                }else{ %> 
+                    <a href="/page=<%= i %>"> <%= i %></a><%
+                }
+            }
+        }else if (parseInt(cur_page) >= 6){
+            for (var i = parseInt(cur_page) - 4; i < parseInt(cur_page); i++){
+                %> <a href="/page=<%= i %>"> <%= i %></a><% 
+            }
+            %> <b> <%= cur_page %></b><%
+            if (parseInt(cur_page) + 4 < parseInt(pages)){
+                for (var i = parseInt(cur_page) + 1; i <= parseInt(cur_page) + 4; i++){
+                    %> <a href="/page=<%= i %>"> <%= i %></a><% 
+                }
+            }else{
+                for (var i = parseInt(cur_page) + 1; i <= parseInt(pages); i++){
+                    %> <a href="/page=<%= i %>"> <%= i %></a><% 
+                }
+            }               
+        }
+        
+        
+    %>
+
+    <%
+    if (pages == 0){
+        %>
+        <a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">></span></a> 
+        <a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">>></span></a>
+        <%
+    } else if (pages == 1) {
+        %>
+        <a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">></span></a> 
+        <a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">>></span></a>
+        <%
+    } else if (pages > 1) {
+        if (cur_page == pages){
+            %>
+            <a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">></span></a> 
+            <%
+        }else{
+            var nextpage = ++cur_page;
+            %> <a href="/page=<%= nextpage %>" class="btn_arr next"><span class="hide">></span></a>  <%
+        }
+        %>
+        <a href="/page=<%= pages %>" class="btn_arr last"><span class="hide">>></span></a>
+        <%
+    }
+    %>
 </div>
 
 <div id="footer">
