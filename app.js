@@ -6,7 +6,7 @@ var path = require('path');
 
 var client = require('mysql').createConnection({
 	user: 'root',
-	password: 'whalstn',
+	password: 'Qmffor01',
 	database: 'northtownway'
 });
 
