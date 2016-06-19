@@ -19,7 +19,7 @@ app.set('view engine', 'html');
 
 var server = http.createServer(app);
 server.listen(52273, '0.0.0.0', function(){
-	console.log('Server running at http://0.0.0.0:52273');
+	console.log('Server running at http://127.0.0.1:52273');
 });
 
 var MAXPOSTPERPAGE = 20;
