@@ -175,3 +175,50 @@ app.post('/', function (request, response) {
 		
 	});
 });
+
+app.post('/post_like', function (request, response){
+	if (request.body.url != "/"){
+		var url = request.body.url.split("/")[1].split("&");
+		// console.log(url);
+		var post_num = null;
+		var page_num = null;
+		for(var i = 0; i < url.length; i++){
+			if (url[i].split("=")[0] == "post"){
+				post_num = url[i].split("=")[1];
+			}else if (url[i].split("=")[0] == "page"){
+				page_num = url[i].split("=")[1];
+			}
+		}
+		client.query('SELECT COUNT(*) as count FROM user_info WHERE ip = ? && bbs_like_id = ?', [request.connection.remoteAddress, parseInt(post_num)], function (error, results){
+			if (error){
+				console.log("Cannot find the post id = %d", parseInt(post_num));
+			}else{
+				var data_num = results[0].count;
+
+				if(data_num == 0){
+					client.query('INSERT INTO user_info (ip, bbs_like_id) VALUES (?, ?)', [request.connection.remoteAddress, parseInt(post_num)], function (error, results){
+
+						client.query('UPDATE bbs SET like_num = like_num + 1 WHERE id = ?', [parseInt(post_num)], function (error, result){
+							if(!error){
+								console.log("Client likes the post, id = %d", parseInt(post_num));
+							}
+						});
+					});
+				}
+
+			}
+		});
+
+		fs.readFile('post.html', 'utf8', function (error, data){
+			if (parseInt(post_num) != null && page_num != null){
+
+			}else if (parseInt(post_num) != null && page_num == null){
+				response.redirect('/post=' + parseInt(post_num));
+			}else{
+				response.redirect('/');
+			}
+		});
+	}else{
+		response.redirect('/');
+	}
+});

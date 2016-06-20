@@ -189,7 +189,6 @@ input[type=text1]:focus {
  	background:#111;
  }
 
-
 .container {
 	padding: 1cm 2cm;
 }
@@ -239,15 +238,27 @@ input[type=text1]:focus {
 						<td><span ><%= post.inquiry_num %></span>
 						</td>
 					</tr>
+                    <tr>
+                        <td>추
+                        </td>
+                        <td><span ><%= post.like_num %></span>
+                        </td>
+                    </tr>
 					<tr>
 						<td colspan="2">
 							<p><%- post.contents %></p>
 						</td>
 					</tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                        <button name="btnLike" value="like" onclick="like()"> LIKE </button>
+                        </td>
+                    </tr>
 				</tbody>
+
+
 			</table>
             <hr/>
-
 <table id="commentTable" class="table table-condensed"></table>
 <table class="table table-condensed">
     <tr>
@@ -256,8 +267,6 @@ input[type=text1]:focus {
                 <p>
                 <div class="form-group">
                     <input type="text" id="commentParentName" name="commentParentName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">
-                </div>
-                <div class="form-group">
                     <input type="password" id="commentParentPassword" name="commentParentPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">
                 </div>
 
@@ -402,6 +411,23 @@ input[type=text1]:focus {
     %>
 </div>
 
+<script>
+
+function like(){
+    $.ajax({
+        url: "/post_like",
+        type: "POST",
+        data: {like: 'yes', url: window.location.pathname},
+        success: function(returned) {
+             console.log(returnet); // here can get the return of route
+        },
+        error: function() {
+
+        }
+    });
+}
+
+</script>
 <div id="footer">
 Copyright &copy; INDEXPAGE.com
 </div>
