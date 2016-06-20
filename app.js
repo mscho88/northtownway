@@ -222,3 +222,21 @@ app.post('/post_like', function (request, response){
 		response.redirect('/');
 	}
 });
+
+app.post('/reply', function (request, response){
+	var url = request.body.url.split('=');
+	var bbs_id = 0;
+	for(var i =0; i < url.length; i++){
+		if (url[i] == "post"){
+			bbs_id = parseInt(url[i + 1]);
+		}
+	}
+
+	var currentdate = new Date(); 
+	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
+				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+	client.query('INSERT INTO reply (bbs_id, name, password, contents, time, ip) VALUES (?, ?, ?, ?, ?, ?)', [bbs_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress], function (error, results){
+		response.redirect(request.body.url);
+	});
+});
