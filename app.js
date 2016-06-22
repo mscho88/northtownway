@@ -111,7 +111,7 @@ app.get('/post=:id', function (request, response){
 				if(error){
 					console.log('Failed to sync to the database server');
 				}else{
-					client.query('UPDATE bbs SET inquiry_num = inquiry_num + 1 WHERE id = ?', [request.param('id')], function (error, result){
+					client.query('UPDATE bbs SET inquiry_num = inquiry_num + 1 WHERE id = ?', [request.param('id')], function (error, results){
 						if(error){
 							console.log('Failed to increase the number of inquiry for the post id = %d', request.param('id'));
 						}else{
@@ -136,7 +136,9 @@ app.get('/post=:id', function (request, response){
 						var data_num = results[0].count;
 
 						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-							response.send(ejs.render(data, {data: results, post: apost[0], cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+							client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
+								response.send(ejs.render(data, {data: results, post: apost[0], reply: replies, cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+							});
 						});
 					});
 				}
@@ -169,12 +171,12 @@ app.post('/insert', function (request, response) {
 	});
 });
 
-app.post('/', function (request, response) {
-	console.log(request.body.search);
-	fs.readFile('index.html', 'utf8', function (error, data) {
+// app.post('/', function (request, response) {
+// 	console.log(request.body.search);
+// 	fs.readFile('index.html', 'utf8', function (error, data) {
 		
-	});
-});
+// 	});
+// });
 
 app.post('/post_like', function (request, response){
 	if (request.body.url != "/"){
@@ -214,6 +216,7 @@ app.post('/post_like', function (request, response){
 
 			}else if (parseInt(post_num) != null && page_num == null){
 				response.redirect('/post=' + parseInt(post_num));
+				// response.redirect(request.get('referer'));
 			}else{
 				response.redirect('/');
 			}
@@ -224,11 +227,14 @@ app.post('/post_like', function (request, response){
 });
 
 app.post('/reply', function (request, response){
-	var url = request.body.url.split('=');
-	var bbs_id = 0;
-	for(var i =0; i < url.length; i++){
-		if (url[i] == "post"){
-			bbs_id = parseInt(url[i + 1]);
+	var url = request.body.url.split("/")[1].split("&");
+	var post_id = 0;
+	var page_id = 0;
+	for(var i = 0; i < url.length; i++){
+		if (url[i].split("=")[0] == "post"){
+			post_id = url[i].split("=")[1];
+		}else if (url[i].split("=")[0] == "page"){
+			page_id = url[i].split("=")[1];
 		}
 	}
 
@@ -236,7 +242,100 @@ app.post('/reply', function (request, response){
 	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
 				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
-	client.query('INSERT INTO reply (bbs_id, name, password, contents, time, ip) VALUES (?, ?, ?, ?, ?, ?)', [bbs_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress], function (error, results){
-		response.redirect(request.body.url);
+	client.query('INSERT INTO reply (bbs_id, name, password, contents, time, ip, dimension, like_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+		[post_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress, 0, 0],
+		function (error, results){
+			if(error){
+				console.log(error);
+			}else{
+				response.redirect(request.get('referer'));
+			}
 	});
+});
+
+app.post('/replyofreply', function (request, response){
+	var url = request.body.url.split("/")[1].split("&");
+	var post_id = 0;
+	var page_id = 0;
+	for(var i = 0; i < url.length; i++){
+		if (url[i].split("=")[0] == "post"){
+			post_id = url[i].split("=")[1];
+		}else if (url[i].split("=")[0] == "page"){
+			page_id = url[i].split("=")[1];
+		}
+	}
+
+	var currentdate = new Date(); 
+	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
+				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+	client.query('INSERT INTO reply (bbs_id, name, password, contents, time, ip, reply_id, dimension, like_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+		[post_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress, request.body.reply_id, request.body.dimension, 0],
+		function (error, results){
+			if(error){
+				console.log(error);
+			}else{
+				response.redirect(request.get('referer'));
+			}
+	});
+});
+
+app.post('/likeReply', function (request, response){
+	var url = request.body.url.split("/")[1].split("&");
+	var post_id = 0;
+	var page_id = 0;
+	for(var i = 0; i < url.length; i++){
+		if (url[i].split("=")[0] == "post"){
+			post_id = url[i].split("=")[1];
+		}else if (url[i].split("=")[0] == "page"){
+			page_id = url[i].split("=")[1];
+		}
+	}
+
+	
+	client.query('SELECT COUNT(*) AS count FROM user_info WHERE ip = ? && reply_like_id = ?', [request.connection.remoteAddress, request.body.reply_id], function (error, result){
+		if (result[0].count == 0){
+			client.query('UPDATE reply SET like_num = like_num + 1 WHERE id = ?', [request.body.reply_id], function (error, result){
+				if (!error){
+					response.redirect(request.get('referer'));
+				}
+			});
+		}
+	});
+});
+
+app.post('/', function(request, response){
+	var key = request.body.search;
+
+	var query = "select * from bbs where title like '%"+key+"%'";
+	client.query(query, function (err, rows){
+		console.log(rows);
+		response.write(JSON.stringify(rows));
+		response.end();
+	});
+
+	// client.getConnection( function (err, connection){
+	// 	console.log("hello");
+	// 	if(err){
+	// 		connection.release();
+	// 	}else{
+	// 		var query = ;
+	// 		console.log(query);
+	// 		client.query(String(query), function (err,rows){
+	// 			connection.release();
+	// 			if(!err) {
+	// 				if(rows.length > 0){
+	// 					res.write(JSON.stringify(rows));
+	// 					res.end();
+	// 				}else{
+	// 					rows=[];
+	// 					res.write(JSON.stringify(rows));
+	// 					res.end();
+	// 				} 
+	//         	} else {
+	// 				console.log("Query failed");  
+	// 			}        
+	// 		});
+	// 	}
+	// });  
 });

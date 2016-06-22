@@ -5,11 +5,11 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="./bootsrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+	<!-- <link href="./bootsrap/css/bootstrap.css" rel="stylesheet" type="text/css"/> -->
 	<!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
 	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <style>
-#header {
+/*#header {
 	
 	color:#cccccc;
 	padding:5px;
@@ -191,7 +191,7 @@ input[type=text1]:focus {
 
 .container {
 	padding: 1cm 2cm;
-}
+}*/
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
@@ -239,7 +239,7 @@ input[type=text1]:focus {
 						</td>
 					</tr>
                     <tr>
-                        <td>추
+                        <td>추천 
                         </td>
                         <td><span ><%= post.like_num %></span>
                         </td>
@@ -255,11 +255,44 @@ input[type=text1]:focus {
                         </td>
                     </tr>
 				</tbody>
-
-
 			</table>
             <hr/>
-<table id="commentTable" class="table table-condensed"></table>
+
+<ul id="commentTable" class="table table-condensed">
+    <%
+    function printComment(item){
+        var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 3 + '%;"' +
+        'id="' + item.id + '" name="commentParentCode">' +
+        '<strong>' + item.name + '</strong>' +
+        '<a style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">답글</a>' +
+        '<a style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천</a>' +
+        '<a>' + item.like_num + '</a>'+
+        '<p>' +
+        item.contents +
+        '<br> </p> </li>';
+        return html;
+    }
+    
+    function childCommentHandler(rep, id){
+        rep.forEach(function (innerItem, innderIndex){
+            if (innerItem.reply_id == id){
+                %> <%- printComment(innerItem); %> <%
+                childCommentHandler(rep, innerItem.id);
+            }
+        });
+    } %>
+
+    <% reply.forEach(function (item, index){ 
+        if (item.dimension == 0){
+        %>
+            <%- printComment(item); %>
+            <%- childCommentHandler(reply, item.id); %>
+            <%
+            
+        }
+}); %>
+</ul>
+
 <table class="table table-condensed">
     <tr>
         <td>
@@ -275,21 +308,17 @@ input[type=text1]:focus {
             </span>
         </td>
     </tr>
+    <tr>
+        <td>
+            <span style='float:right'>
+                <div class="form-group">
+                    <button type="button" id="commentParentSubmit" name="commentParentSubmit" class="btn btn-default">확인</button>
+                </div>
+            </span>
+        </td>
+    </tr>
 </table>
-
-<table class="table table-condensed">
-    <thead>
-        <tr>
-            <td>
-                <span style='float:right'>
-                    <div class="form-group">
-                        <button type="button" id="commentParentSubmit" name="commentParentSubmit" class="btn btn-default">확인</button>
-                    </div>
-                </span>
-            </td>
-        </tr>
-    </thead>
-</table>
+<br>
 
 </div>
 
@@ -418,13 +447,134 @@ function like(){
         url: "/post_like",
         type: "POST",
         data: {like: 'yes', url: window.location.pathname},
-        success: function(returned) {
-             console.log(returnet); // here can get the return of route
+        success: function(response) {
+             // console.log(returned); // here can get the return of route
         },
         error: function() {
+        }
+    });
+}
+
+function addComment(id, dimension) {
+    // var commentEditor = '<tr id="commentEditor">'+
+    //                         '<td style="width:' + parseInt(3 + dimension * 3) + '%"> </td>'+
+    //                         '<td>'+
+    //                             '<span class="form-inline" role="form">'+
+    //                                 '<p>'+
+    //                                     '<div class="form-group">'+
+    //                                         '<input type="text" id="commentChildName" name="commentChildName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">'+
+    //                                         ' <input type="password" id="commentChildPassword" name="commentChildPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">'+
+    //                                     '</div>'+
+    //                                 '</p>'+
+    //                                 '<textarea id="commentChildText" name="commentChildText" class="form-control" style="width:98%" rows="4"></textarea>'+
+    //                                 '<div class="form-group">'+
+    //                                     '<button type="button" onclick="addComment('+ id +',' + parseInt(dimension + 1) +
+    //                                         ')" id="commentChildSubmit" class="btn btn-default">확인</button>'+
+    //                                 '</div>'+
+    //                             '</span>'+
+    //                         '</td>'+
+    //                     '</tr>';
+    var commentEditor = '<li style="list-style-type:none;margin-left:' + dimension + '%;"><table><tr id="commentEditor">'+
+                            '<td>'+
+                                '<span class="form-inline" role="form">'+
+                                    '<p>'+
+                                        '<div class="form-group">'+
+                                            '<input type="text" id="commentChildName" name="commentChildName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">'+
+                                            '<input type="password" id="commentChildPassword" name="commentChildPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">'+
+                                        '</div>'+
+                                    '</p>'+
+                                    '<textarea id="commentChildText" name="commentChildText" class="form-control" style="width:98%" rows="4"></textarea>'+
+                                    '<div class="form-group">'+
+                                        '<button type="button" onclick="commitComment('+ id +',' + parseInt(dimension + 1) +
+                                            ')" id="commentChildSubmit" class="btn btn-default">확인</button>'+
+                                    '</div>'+
+                                '</span>'+
+                            '</td>'+
+                        '</tr></table></li>';
+    $("#commentEditor").remove();
+    $(commentEditor).insertAfter("#" + id);
+}
+
+function commitComment(id, dimension){
+    var pName = $("#commentChildName");
+    var pPassword = $("#commentChildPassword");
+    var pText = $("#commentChildText");
+       
+    if($.trim(pName.val()) == ""){
+        alert("이름을 입력하세요.");
+        pName.focus();
+        return;
+    }else if($.trim(pPassword.val()) == ""){
+        alert("패스워드를 입력하세요.");
+        pPassword.focus();
+        return;
+    }else if($.trim(pText.val()) == ""){
+        alert("내용을 입력하세요.");
+        pText.focus();
+        return;
+    }
+
+    $.ajax({
+        url: "/replyofreply",
+        type: "POST",
+        data: {reply_id: id, dimension: dimension, name: pName.val(), password: pPassword.val(), contents: pText.val(), url: window.location.pathname},
+        success: function (response) {
+
+        },
+        error: function (){
 
         }
     });
+    location.reload();
+}
+
+function likeReply(id){
+    $.ajax({
+        url: "/likeReply",
+        type: "POST",
+        data: {reply_id: id, url: window.location.pathname},
+        success: function (response){
+
+        },
+        error: function (){
+
+        }
+    });
+    location.reload();
+}
+function addChildComment(id){
+    // var pName = $("#commentParentName");
+    //     var pPassword = $("#commentParentPassword");
+    //     var pText = $("#commentParentText");
+           
+    //     if($.trim(pName.val()) == ""){
+    //         alert("이름을 입력하세요.");
+    //         pName.focus();
+    //         return;
+    //     }else if($.trim(pPassword.val()) == ""){
+    //         alert("패스워드를 입력하세요.");
+    //         pPassword.focus();
+    //         return;
+    //     }else if($.trim(pText.val()) == ""){
+    //         alert("내용을 입력하세요.");
+    //         pText.focus();
+    //         return;
+    //     }
+
+    // $.ajax({
+    //     url: "/replyofreply",
+    //     type: "POST",
+    //     data: {parent:id, name: pName.val(), password: pPassword.val(), contents: pText.val(), url: window.location.pathname},
+    //     success: function(returned){
+    //         $("#commentParentName").val("");
+    //         $("#commentParentPassword").val("");
+    //         $("#commentParentText").val("");
+    //     },
+    //     error: function() {
+
+    //     }
+    //     location.reload();
+    // });
 }
 
 $(function(){
@@ -447,16 +597,16 @@ $(function(){
             return;
         }
            
-        var commentParentText = '<tr id="r1" name="commentParentCode">'+
-                                    '<td colspan=2>'+
-                                        '<strong>'+pName.val()+'</strong> '+pPassword.val()+' <a style="cursor:pointer;" name="pAdd">답글</a> | <a style="cursor:pointer;" name="pDel">삭제</a><p>'+pText.val().replace(/\n/g, "<br>")+'</p>'+
-                                    '</td>'+
-                                '</tr>';
-        if($('#commentTable').contents().size()==0){
-            $('#commentTable').append(commentParentText);
-        }else{
-            $('#commentTable tr:last').after(commentParentText);
-        }
+        // var commentParentText = '<tr id="r1" name="commentParentCode">'+
+        //                             '<td colspan=2>'+
+        //                                 '<strong>'+pName.val()+'</strong> '+pPassword.val()+' <a style="cursor:pointer;" name="pAdd">답글</a> | <a style="cursor:pointer;" name="pDel">삭제</a><p>'+pText.val().replace(/\n/g, "<br>")+'</p>'+
+        //                             '</td>'+
+        //                         '</tr>';
+        // if($('#commentTable').contents().size()==0){
+        //     $('#commentTable').append(commentParentText);
+        // }else{
+        //     $('#commentTable tr:last').after(commentParentText);
+        // }
            
         $.ajax({
             url: "/reply",
@@ -470,129 +620,166 @@ $(function(){
             error: function() {
             }
         });
+        location.reload();
     });
-    $(document).on("click","#commentChildSubmit", function(){
+
+    $("#commentChildSubmit").click(function(event){
+        // var pName = $("#commentChildName");
+        // var pPassword = $("#commentChildPassword");
+        // var pText = $("#commentChildText");
            
-        var cName = $("#commentChildName");
-        var cPassword = $("#commentChildPassword");
-        var cText = $("#commentChildText");
+        // if($.trim(pName.val()) == ""){
+        //     alert("이름을 입력하세요.");
+        //     pName.focus();
+        //     return;
+        // }else if($.trim(pPassword.val()) == ""){
+        //     alert("패스워드를 입력하세요.");
+        //     pPassword.focus();
+        //     return;
+        // }else if($.trim(pText.val()) == ""){
+        //     alert("내용을 입력하세요.");
+        //     pText.focus();
+        //     return;
+        // }
+
+        // alert($(this).id);
+        // $.ajax({
+        //     url: "/replyofreply", type: "POST", data: {name: pName.val(), password: pPassword.val(), contents: pText.val(), url: window.location.pathname}, sucess: function (returned) {
+        //         $("#commentChildName").val("");
+        //         $("#commentChildPassword").val("");
+        //         $("#commentChildText").val("");
+        //     }, error: function() {
+        //     }
+        // });
+        // location.reload();
+    });
+
+    // $("#addComment").click(function (event){
+    //     alert("hello");
+    // });
+
+    // $(document).on("click", "#commentChildSubmit", function(){
            
-        if($.trim(cName.val())==""){
-            alert("이름을 입력하세요.");
-            cName.focus();
-            return;
-        }else if($.trim(cPassword.val())==""){
-            alert("패스워드를 입력하세요.");
-            cPassword.focus();
-            return;
-        }else if($.trim(cText.val())==""){
-            alert("내용을 입력하세요.");
-            cText.focus();
-            return;
-        }  
-        var commentChildText = '<tr name="commentChildCode">'+
-                                    '<td style="width:1%"><span class="glyphicon glyphicon-arrow-right"></span></td>'+
-                                    '<td style="width:99%">'+
-                                        '<strong>'+cName.val()+'</strong> '+cPassword.val()+' <a style="cursor:pointer;" name="cAdd">답글</a> | <a style="cursor:pointer;" name="cDel">삭제</a>'+
-                                        '<p>'+cText.val().replace(/\n/g, "<br>")+'</p>'+
-                                    '</td>'+
-                                '</tr>';
+    //     var cName = $("#commentChildName");
+    //     var cPassword = $("#commentChildPassword");
+    //     var cText = $("#commentChildText");
+           
+    //     if($.trim(cName.val())==""){
+    //         alert("이름을 입력하세요.");
+    //         cName.focus();
+    //         return;
+    //     }else if($.trim(cPassword.val())==""){
+    //         alert("패스워드를 입력하세요.");
+    //         cPassword.focus();
+    //         return;
+    //     }else if($.trim(cText.val())==""){
+    //         alert("내용을 입력하세요.");
+    //         cText.focus();
+    //         return;
+    //     }  
+    //     var commentChildText = '<tr name="commentChildCode">'+
+    //                                 '<td style="width:1%"><span class="glyphicon glyphicon-arrow-right"></span></td>'+
+    //                                 '<td style="width:99%">'+
+    //                                     '<strong>'+cName.val()+'</strong> '+cPassword.val()+' <a style="cursor:pointer;" name="cAdd">답글</a> | <a style="cursor:pointer;" name="cDel">삭제</a>'+
+    //                                     '<p>'+cText.val().replace(/\n/g, "<br>")+'</p>'+
+    //                                 '</td>'+
+    //                             '</tr>';
                                    
         
-        var prevTr = $(this).parent().parent().parent().parent().prev();
+    //     var prevTr = $(this).parent().parent().parent().parent().prev();
        
-        $("#commentEditor").remove();
-        while(prevTr.attr("name")!="commentParentCode"){
-            prevTr = prevTr.prev();
-        }
-        var check = false;
-        var nextTr = prevTr.next();
-        if(nextTr.attr("name")!="commentChildCode"){
-            prevTr.after(commentChildText);
-        }else{
+    //     $("#commentEditor").remove();
+    //     while(prevTr.attr("name")!="commentParentCode"){
+    //         prevTr = prevTr.prev();
+    //     }
+    //     var check = false;
+    //     var nextTr = prevTr.next();
+    //     if(nextTr.attr("name")!="commentChildCode"){
+    //         prevTr.after(commentChildText);
+    //     }else{
             
-            while(nextTr.attr("name")=="commentChildCode"){
-                nextTr = nextTr.next();
-                check = true;
-            }
-        }
+    //         while(nextTr.attr("name")=="commentChildCode"){
+    //             nextTr = nextTr.next();
+    //             check = true;
+    //         }
+    //     }
            
-        if(check){
-            nextTr = nextTr.prev();
-            nextTr.after(commentChildText);
-        }
+    //     if(check){
+    //         nextTr = nextTr.prev();
+    //         nextTr.after(commentChildText);
+    //     }
            
-    });
+    // });
     
-    $(document).on("click","table#commentTable a", function(){
+    // $(document).on("click","table#commentTable a", function(){
            
-        if($(this).attr("name")=="pDel"){
-            if (confirm("답글을 삭제 하시면 밑에 답글도 모두 삭제 됩니다. 정말 삭제하시겠습니까?") == true){    
+    //     if($(this).attr("name")=="pDel"){
+    //         if (confirm("답글을 삭제 하시면 밑에 답글도 모두 삭제 됩니다. 정말 삭제하시겠습니까?") == true){    
                    
-                var delComment = $(this).parent().parent();
-                var nextTr = delComment.next();
-                var delTr;
+    //             var delComment = $(this).parent().parent();
+    //             var nextTr = delComment.next();
+    //             var delTr;
                 
-                while(nextTr.attr("name")=="commentCode"){
-                    nextTr = nextTr.next();
-                    delTr = nextTr.prev();
-                    delTr.remove();
-                }
+    //             while(nextTr.attr("name")=="commentCode"){
+    //                 nextTr = nextTr.next();
+    //                 delTr = nextTr.prev();
+    //                 delTr.remove();
+    //             }
                    
-                delComment.remove();
+    //             delComment.remove();
                    
-            }else{   
-                return;
-            }
-        }else if($(this).attr("name")=="cDel"){
-            if (confirm("정말 삭제하시겠습니까??") == true){    
-                $(this).parent().parent().remove();
-            }else{   
-                return;
-            }
-        }else{
+    //         }else{   
+    //             return;
+    //         }
+    //     }else if($(this).attr("name")=="cDel"){
+    //         if (confirm("정말 삭제하시겠습니까??") == true){    
+    //             $(this).parent().parent().remove();
+    //         }else{   
+    //             return;
+    //         }
+    //     }else{
             
-            var parentElement = $(this).parent().parent();
+    //         var parentElement = $(this).parent().parent();
             
-            $("#commentEditor").remove();
+    //         $("#commentEditor").remove();
             
-            var commentEditor = '<tr id="commentEditor">'+
-                                    '<td style="width:1%"> </td>'+
-                                    '<td>'+
-                                        '<span class="form-inline" role="form">'+
-                                            '<p>'+
-                                                '<div class="form-group">'+
-                                                    '<input type="text" id="commentChildName" name="commentChildName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">'+
-                                                '</div>'+
-                                                '<div class="form-group">'+
-                                                    ' <input type="password" id="commentChildPassword" name="commentChildPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">'+
-                                                '</div>'+
-                                                '<div class="form-group">'+
-                                                    '<button type="button" id="commentChildSubmit" class="btn btn-default">확인</button>'+
-                                                '</div>'+
-                                            '</p>'+
-                                                '<textarea id="commentChildText" name="commentChildText" class="form-control" style="width:98%" rows="4"></textarea>'+
-                                        '</span>'+
-                                    '</td>'+
-                                '</tr>';
+    //         var commentEditor = '<tr id="commentEditor">'+
+    //                                 '<td style="width:1%"> </td>'+
+    //                                 '<td>'+
+    //                                     '<span class="form-inline" role="form">'+
+    //                                         '<p>'+
+    //                                             '<div class="form-group">'+
+    //                                                 '<input type="text" id="commentChildName" name="commentChildName" class="form-control col-lg-2" data-rule-required="true" placeholder="이름" maxlength="10">'+
+    //                                             '</div>'+
+    //                                             '<div class="form-group">'+
+    //                                                 ' <input type="password" id="commentChildPassword" name="commentChildPassword" class="form-control col-lg-2" data-rule-required="true" placeholder="패스워드" maxlength="10">'+
+    //                                             '</div>'+
+    //                                             '<div class="form-group">'+
+    //                                                 '<button type="button" id="commentChildSubmit" class="btn btn-default">확인</button>'+
+    //                                             '</div>'+
+    //                                         '</p>'+
+    //                                             '<textarea id="commentChildText" name="commentChildText" class="form-control" style="width:98%" rows="4"></textarea>'+
+    //                                     '</span>'+
+    //                                 '</td>'+
+    //                             '</tr>';
                                    
-            parentElement.after(commentEditor); 
-        }
+    //         parentElement.after(commentEditor); 
+    //     }
            
-    });
+    // });
        
-    $( "#list" ).click(function( event ) {
-        location.href='/community/notice';
-    });
-    $( "#modify" ).click(function( event ) {
-        location.href='/community/modify/notice/${community.id}';
-    });
-    $( "#delete" ).click(function( event ) {
-        location.href='/community/delete/notice/${community.id}';
-    });
-    $( "#write" ).click(function( event ) {
-        location.href='/community/notice/edit';
-    });
+    // $( "#list" ).click(function( event ) {
+    //     location.href='/community/notice';
+    // });
+    // $( "#modify" ).click(function( event ) {
+    //     location.href='/community/modify/notice/${community.id}';
+    // });
+    // $( "#delete" ).click(function( event ) {
+    //     location.href='/community/delete/notice/${community.id}';
+    // });
+    // $( "#write" ).click(function( event ) {
+    //     location.href='/community/notice/edit';
+    // });
 });
 
 
