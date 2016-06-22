@@ -9,6 +9,7 @@ var client = require('mysql').createConnection({
 	password: 'Qmffor01',
 	database: 'northtownway'
 });
+var urlencode = require('urlencode');
 
 var app = express();
 app.use(express.bodyParser());
@@ -270,7 +271,7 @@ app.post('/replyofreply', function (request, response){
 				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
 	client.query('INSERT INTO reply (bbs_id, name, password, contents, time, ip, reply_id, dimension, like_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-		[post_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress, request.body.reply_id, request.body.dimension, 0],
+		[post_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress, request.body.reply_id, request.body.dimension, 02],
 		function (error, results){
 			if(error){
 				console.log(error);
@@ -304,38 +305,26 @@ app.post('/likeReply', function (request, response){
 	});
 });
 
-app.post('/', function(request, response){
-	var key = request.body.search;
+app.post('/', function (request, response){
+	if (request.body.search != null){
+		// response.setEncoding('utf8');
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+// app.post('/search=:keyword&page=:page&post=:post_num')
 
-	var query = "select * from bbs where title like '%"+key+"%'";
-	client.query(query, function (err, rows){
-		console.log(rows);
-		response.write(JSON.stringify(rows));
-		response.end();
+app.get('/search=:keyword', function (request, response) {
+	// console.log(request.param('keyword'));
+	var key = request.param('keyword');
+
+	fs.readFile('index.html', 'utf8', function (error, data){
+		var data_num = 0;
+		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, row){
+			data_num = row[0].count;
+
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT 20", function (error, results){
+				response.send(ejs.render(data, {data: results, cur_page: 1, pages: Math.ceil(data_num / 20)}));
+			});
+		});
 	});
-
-	// client.getConnection( function (err, connection){
-	// 	console.log("hello");
-	// 	if(err){
-	// 		connection.release();
-	// 	}else{
-	// 		var query = ;
-	// 		console.log(query);
-	// 		client.query(String(query), function (err,rows){
-	// 			connection.release();
-	// 			if(!err) {
-	// 				if(rows.length > 0){
-	// 					res.write(JSON.stringify(rows));
-	// 					res.end();
-	// 				}else{
-	// 					rows=[];
-	// 					res.write(JSON.stringify(rows));
-	// 					res.end();
-	// 				} 
-	//         	} else {
-	// 				console.log("Query failed");  
-	// 			}        
-	// 		});
-	// 	}
-	// });  
 });
