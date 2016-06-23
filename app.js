@@ -26,6 +26,7 @@ server.listen(52273, '0.0.0.0', function(){
 var MAXPOSTPERPAGE = 20;
 
 app.get('/', function (request, response) {
+	// This is the first page when an user enters the webpage
 	fs.readFile('index.html', 'utf8', function (error, data){
 		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_num){
 			var post_num = post_num[0].count;
@@ -34,15 +35,6 @@ app.get('/', function (request, response) {
 			});
 		});
 	});
-});
-
-app.post('/', function (request, response){
-	// If the given key-word is an empty string, redirect to the main page. Otherwise, proceed to the search page.
-	if (request.body.search == ""){
-		response.redirect('/');
-	}else if (request.body.search != null){
-		response.redirect('/search=' + urlencode(request.body.search));
-	}
 });
 
 app.get('/search=:keyword&page=:page&post=:id', function (request, response) {
@@ -68,8 +60,7 @@ app.get('/search=:keyword&page=:page&post=:id', function (request, response) {
 		var key = request.param('keyword');
 		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
 			var post_num = post_num[0].count;
-
-			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?, ?", [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, posts){
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?, ?", [(request.param('page') - 1) * MAXPOSTPERPAGE, MAXPOSTPERPAGE], function (error, posts){
 				client.query("SELECT * FROM bbs WHERE id = ?", [request.param('id')], function (error, apost){
 					client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
 						response.send(ejs.render(data, {posts: posts, post: apost[0], reply: replies, keyword: key, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE)}))
@@ -79,12 +70,60 @@ app.get('/search=:keyword&page=:page&post=:id', function (request, response) {
 		});
 	});
 });
+
 app.get('/search=:keyword&page=:page', function (request, response) {
+	fs.readFile('index.html', 'utf8', function (error, data){
+		var key = request.param('keyword');
+		client.query("SELECT COUNT(*) AS count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
+			var post_num = post_num[0].count;
 
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?, ?", [(request.param('page') - 1) * MAXPOSTPERPAGE, MAXPOSTPERPAGE], function (error, posts){
+				if (error){
+					console.log("query failed d!!!!");
+				}
+				client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
+					response.send(ejs.render(data, {posts: posts, reply: replies, keyword: key, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE)}))
+				});
+			});
+		});
+	});
 });
+
 app.get('/search=:keyword&post=:id', function (request, response) {
+	client.query('SELECT COUNT(*) as count FROM user_info WHERE ip = ? && bbs_id = ?', [request.connection.remoteAddress, request.param('id')], function (error, results){
+		if (results[0].count == 0){
+			client.query('INSERT INTO user_info (ip, bbs_id) VALUES (?, ?)', [request.connection.remoteAddress, request.param('id')], function (error, results){
+				if(error){
+					console.log('Failed to sync to the database server');
+				}else{
+					client.query('UPDATE bbs SET inquiry_num = inquiry_num + 1 WHERE id = ?', [request.param('id')], function (error, results){
+						if(error){
+							console.log('Failed to increase the number of inquiry for the post id = %d', request.param('id'));
+						}else{
+							console.log('Succeeded to increase the number of inquiry for the post id = %d', request.param('id'));
+						}
+					});
+				}
+			});
+		}
+	});
 
+	fs.readFile('post.html', 'utf8', function (error, data){
+		var key = request.param('keyword');
+		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
+			var post_num = post_num[0].count;
+
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?" [MAXPOSTPERPAGE], function (error, posts){
+				client.query("SELECT * FROM bbs WHERE id = ?", [request.param('id')], function (error, apost){
+					client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
+						response.send(ejs.render(data, {posts: posts, post: apost[0], reply: replies, keyword: key, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE)}))
+					});
+				});
+			});
+		});
+	});
 });
+
 app.get('/search=:keyword', function (request, response) {
 	var key = request.param('keyword');
 	fs.readFile('index.html', 'utf8', function (error, data){
@@ -97,17 +136,16 @@ app.get('/search=:keyword', function (request, response) {
 	});
 });
 
-
 app.get('/page=:page&post=:id', function (request, response){
 	fs.readFile('post.html', 'utf8', function (error, data){
-		client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, posts){
+		client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, MAXPOSTPERPAGE], function (error, posts){
 			// var post_num = 0;
 			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_count){
 				var post_num = post_count[0].count;
 				client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
 					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
 						client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
-							response.send(ejs.render(data, {posts: posts, reply: replies, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE), post: apost[0]}));
+							response.send(ejs.render(data, {posts: posts, keyword: null, reply: replies, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE), post: apost[0]}));
 						});
 					});
 				});
@@ -129,8 +167,8 @@ app.get('/page=:page', function (request, response){
 					if (Math.ceil(data_num / MAXPOSTPERPAGE) < request.param('page')){
 						response.redirect('/');
 					}else{
-						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, results){
-							response.send(ejs.render(data, {posts: results, cur_page: request.param('page'), pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, MAXPOSTPERPAGE], function (error, results){
+							response.send(ejs.render(data, {posts: results, keyword: null, cur_page: request.param('page'), pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
 						});
 					}
 				});
@@ -174,7 +212,7 @@ app.get('/post=:id', function (request, response){
 
 						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
 							client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
-								response.send(ejs.render(data, {posts: results, post: apost[0], reply: replies, cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+								response.send(ejs.render(data, {posts: results, keyword: null, post: apost[0], reply: replies, cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
 							});
 						});
 					});
@@ -313,12 +351,53 @@ app.post('/likeReply', function (request, response){
 	});
 });
 
-
-// app.post('/search=:keyword&page=:page&post=:post_num')
-
-
 app.post('/post=:id', function (request, response){
-	response.redirect('/search=' + urlencode(request.body.search));
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+
+app.post('/page=:page', function (request, response){
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+
+app.post('/page=:page&post=:id', function (request, response){
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+
+app.post('/search=:keyword', function (request, response){
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+
+app.post('/post:=id', function (request, response){
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+
+app.post('/', function (request, response){
+	// If the given key-word is an empty string, redirect to the main page. Otherwise, proceed to the search page.
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
 });
 
 app.get('/insert', function (request, response) {
@@ -360,7 +439,7 @@ app.post('/insert', function (request, response) {
 	CASE 2.2 : 	USER CLICKS A DIFFERENT POST ON THE POST SELECTED ABOVE
 	CASE 2.3 : 	USER SEARCHES A POST ON THE POST SELECTED ABOVE
 
-	CASE 3 : 	USER SEARCHES A POST ON PAGE 1
+	DONE	CASE 3 : 	USER SEARCHES A POST ON PAGE 1
 	CASE 3.1 : 	USER CLICKS A POST FROM THE SEARCHED POSTS
 	CASE 3.2 : 	USER CLICKS A DIFFERENT PAGE FROM THE SEARCHED POSTS
 	CASE 3.3 : 	USER CLICKS A POST FROM THE SEARCHED POSTS ON A DIFFERENT PAGE

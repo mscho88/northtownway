@@ -10,7 +10,6 @@
 	<!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
 	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <style>
-
 #header {
 	
 	color:#cccccc;
@@ -37,7 +36,7 @@
 	padding:1cm 3cm;
 }
 #footer {
-	background-color:#262626;
+	background-color:#333333;
 	color:white;
 	clear:both;
 	text-align:center;
@@ -168,7 +167,7 @@ input[type=text]:focus {
  	margin-right:3px;
  	width:15px;
  	color:#000;
- 	font:bold 12px helvetica;
+ 	font: 12px helvetica;
  	border:1px solid #eee;
  	text-align: center;
  	text-decoration:none;
@@ -182,13 +181,12 @@ input[type=text]:focus {
  .paging .btn_arr, .paging .on {
  	margin:0 3px; 
  	padding-top:0; 
- 	border :1px solid #ddd;
+ 	border :1px  #ddd;
  }
  .paging .on {
  	padding-top:1px; 
  	height:22px; 
  	color:#000; 
- 	font-weight:bold; 
  	background:#111;
  }
 
@@ -198,12 +196,13 @@ input[type=text]:focus {
 <body>
 
 <div id="header">
+	<img src="http://i.imgur.com/kZjUcpJ.png" alt="face" width="100" height="100">
 	<h1>IRICOM</h1>
 </div>
 
 <div id="header1">
-	<ul> 
-		<li><a class="active" href= ""></a></li>
+	<ul id = "first">
+		<li><a ></a></li>
 		<!-- <li><a href="#news">유머</a></li>
 		<li><a href= "#Contact">연예</a></li>
 		<li><a href= "#about">정치</a></li>
@@ -292,83 +291,140 @@ input[type=text]:focus {
 	</table>
 	<br>	
 	<form method="post">
-  		<input type="text" name="search" placeholder="Search..">
+  		<input type="text" name="search" placeholder="검색..">
 	</form>
 </div>
 
 <br>
 
 <div class="paging"> 
-	<a href="/page=1" class="btn_arr first"><span class="hide"><< INIT</span></a>
+	<%if (keyword != null) {
+		%>
+		<a href="/search=<%=keyword%>" class="btn_arr first"><span class="hide"><< INIT</span></a>
+		<%
+	}else{
+		%>
+		<a href="/page=1" class="btn_arr first"><span class="hide"><< INIT</span></a>
+		<%
+	}
+	%>
+	
 
 	<%
 	if (cur_page > 1) {
-		%> <a href="/page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
+		if (keyword != null){
+			%> <a href="/search=<%= keyword %>&page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
+		}else{
+			%> <a href="/page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
+		}
 	}else{
-		%> <a href="/page=1%>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
+		if (keyword != null){
+			%> <a href="/search=<%= keyword %>&page=1%>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
+		}else{
+			%> <a href="/page=1%>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
+		}
 	}
 	%>
 		
 	<%
 		var max_pages = 9;
-		if (parseInt(pages) < 9){
-			max_pages = parseInt(pages);
-		}
-		
-		if (parseInt(pages) == 0){
-			max_pages = 1;
-		}
+		if (parseInt(pages) < 9)	{ max_pages = parseInt(pages); }
+		if (parseInt(pages) == 0)	{ max_pages = 1; }
 		
 		if (parseInt(cur_page) <= 5){
 			for (var i = 1; i <= max_pages; i++){
 				if (parseInt(cur_page) == i){
 					%> <b> <%= i %></b><%
-				}else{ %> 
-					<a href="/page=<%= i %>"> <%= i %></a><%
+				}else{ 
+					if(keyword != null){
+						%><a href="/search=<%= keyword %>&page=<%= i %>"> <%= i %></a><%
+					}else{
+						%><a href="/page=<%= i %>"> <%= i %></a><%
+					}%> 
+					<%
 				}
 			}
 		}else if (parseInt(cur_page) >= 6){
 			for (var i = parseInt(cur_page) - 4; i < parseInt(cur_page); i++){
-				%> <a href="/page=<%= i %>"> <%= i %></a><% 
+				if (keyword != null){
+					%> <a href="/search=<%= keyword %>&page=<%= i %>"> <%= i %></a><% 
+				}else{
+					%> <a href="/page=<%= i %>"> <%= i %></a><% 
+				}
 			}
 			%> <b> <%= cur_page %></b><%
 			if (parseInt(cur_page) + 4 < parseInt(pages)){
 				for (var i = parseInt(cur_page) + 1; i <= parseInt(cur_page) + 4; i++){
-					%> <a href="/page=<%= i %>"> <%= i %></a><% 
+					if (keyword != null){
+						%> <a href="/search=<%= keyword %>&page=<%= i %>"> <%= i %></a><% 
+					}else{
+						%> <a href="/page=<%= i %>"> <%= i %></a><% 
+					}
 				}
 			}else{
 				for (var i = parseInt(cur_page) + 1; i <= parseInt(pages); i++){
-					%> <a href="/page=<%= i %>"> <%= i %></a><% 
+					if (keyword != null){
+						%> <a href="/search=<%= keyword %>&page=<%= i %>"> <%= i %></a><% 
+					}else{
+						%> <a href="/page=<%= i %>"> <%= i %></a><% 
+					}
 				}
 			}				
 		}
-		
-		
-	%>
 
-	<%
 	if (pages == 0){
-		%>
-		<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
-		<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
-		<%
-	} else if (pages == 1) {
-		%>
-		<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
-		<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
-		<%
-	} else if (pages > 1) {
-		if (cur_page == pages){
+		if (keyword != null){
 			%>
-			<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+			<a href="/search=<%= keyword %>&page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+			<a href="/search=<%= keyword %>&page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
 			<%
 		}else{
-			var nextpage = ++cur_page;
-			%> <a href="/page=<%= nextpage %>" class="btn_arr next"><span class="hide">NEXT ></span></a>  <%
+			%>
+			<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+			<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
+			<%
 		}
-		%>
-		<a href="/page=<%= pages %>" class="btn_arr last"><span class="hide">LAST >></span></a>
-		<%
+	} else if (pages == 1) {
+		if (keyword != null){
+			%>
+			<a href="/search=<%= keyword %>&page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+			<a href="/search=<%= keyword %>&page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
+			<%
+		}else{
+			%>
+			<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+			<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
+			<%
+		}	
+	} else if (pages > 1) {
+		if (cur_page == pages){
+			if (keyword != null){
+				%>
+				<a href="/search=<%= keyword %>&page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+				<%
+			}else{
+				%>
+				<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+				<%
+			}
+		}else{
+			if(keyword != null){
+				var nextpage = ++cur_page;
+				%> <a href="/search=<%= keyword %>&page=<%= nextpage %>" class="btn_arr next"><span class="hide">NEXT ></span></a>  <%
+			}else{
+				var nextpage = ++cur_page;
+				%> <a href="/page=<%= nextpage %>" class="btn_arr next"><span class="hide">NEXT ></span></a>  <%
+			}
+		}
+		if (keyword != null){
+			%>
+			<a href="/search=<%= keyword %>&page=<%= pages %>" class="btn_arr last"><span class="hide">LAST >></span></a>
+			<%
+		}else{
+			%>
+			<a href="/page=<%= pages %>" class="btn_arr last"><span class="hide">LAST >></span></a>
+			<%
+		}
 	}
 	%>
 </div>
