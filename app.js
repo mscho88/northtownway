@@ -27,60 +27,97 @@ var MAXPOSTPERPAGE = 20;
 
 app.get('/', function (request, response) {
 	fs.readFile('index.html', 'utf8', function (error, data){
-		var data_num = 0;
-		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
-			data_num = results[0].count;
-			client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-				response.send(ejs.render(data, {data: results, cur_page: 1, pages: Math.ceil(data_num / 20)}));
+		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_num){
+			var post_num = post_num[0].count;
+			client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?', [MAXPOSTPERPAGE], function (error, posts){
+				response.send(ejs.render(data, {posts: posts, keyword: null, cur_page: 1, pages: Math.ceil(post_num / MAXPOSTPERPAGE)}));
 			});
 		});
 	});
 });
 
-app.get('/page=:page&post=:id', function (request, response){
-	fs.readFile('post.html', 'utf8', function (error, data){
-		if(error){
-			console.log('post.ejs file either does not exist or is crashed.');
-		}else{
-			client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, results){
+app.post('/', function (request, response){
+	// If the given key-word is an empty string, redirect to the main page. Otherwise, proceed to the search page.
+	if (request.body.search == ""){
+		response.redirect('/');
+	}else if (request.body.search != null){
+		response.redirect('/search=' + urlencode(request.body.search));
+	}
+});
+
+app.get('/search=:keyword&page=:page&post=:id', function (request, response) {
+	client.query('SELECT COUNT(*) as count FROM user_info WHERE ip = ? && bbs_id = ?', [request.connection.remoteAddress, request.param('id')], function (error, results){
+		if (results[0].count == 0){
+			client.query('INSERT INTO user_info (ip, bbs_id) VALUES (?, ?)', [request.connection.remoteAddress, request.param('id')], function (error, results){
 				if(error){
-					console.log('Fetching data from the database is unavailable');
+					console.log('Failed to sync to the database server');
 				}else{
-					var data_num = 0;
-			
-					client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
-						if (error){
-							console.log('Could not fetch the data from the database');
+					client.query('UPDATE bbs SET inquiry_num = inquiry_num + 1 WHERE id = ?', [request.param('id')], function (error, results){
+						if(error){
+							console.log('Failed to increase the number of inquiry for the post id = %d', request.param('id'));
 						}else{
-							client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
-								response.send(ejs.render(data, {data: results, post: apost[0]}));
-							});
+							console.log('Succeeded to increase the number of inquiry for the post id = %d', request.param('id'));
 						}
 					});
-					response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: request.param('page')}));
 				}
 			});
 		}
 	});
+
+	fs.readFile('post.html', 'utf8', function (error, data){
+		var key = request.param('keyword');
+		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
+			var post_num = post_num[0].count;
+
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?, ?", [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, posts){
+				client.query("SELECT * FROM bbs WHERE id = ?", [request.param('id')], function (error, apost){
+					client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
+						response.send(ejs.render(data, {posts: posts, post: apost[0], reply: replies, keyword: key, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE)}))
+					});
+				});
+			});
+		});
+	});
+});
+app.get('/search=:keyword&page=:page', function (request, response) {
+
+});
+app.get('/search=:keyword&post=:id', function (request, response) {
+
+});
+app.get('/search=:keyword', function (request, response) {
+	var key = request.param('keyword');
+	fs.readFile('index.html', 'utf8', function (error, data){
+		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
+			var post_num = post_num[0].count;
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT 20", function (error, posts){
+				response.send(ejs.render(data, {posts: posts, keyword: key, cur_page: 1, pages: Math.ceil(post_num / 20)}));
+			});
+		});
+	});
+});
+
+
+app.get('/page=:page&post=:id', function (request, response){
+	fs.readFile('post.html', 'utf8', function (error, data){
+		client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, posts){
+			// var post_num = 0;
+			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_count){
+				var post_num = post_count[0].count;
+				client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
+					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+						client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
+							response.send(ejs.render(data, {posts: posts, reply: replies, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE), post: apost[0]}));
+						});
+					});
+				});
+			});
+			// response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: request.param('page')}));
+		});
+	});
 });
 
 app.get('/page=:page', function (request, response){
-	// need to send the last page
-	// if (request.param('page') == -1){
-	// 	fs.readFile('index.html', 'utf8', function (error, data){
-	// 		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
-	// 			var page_num = Math.ceil(results[0].count / MAXPOSTPERPAGE);
-	// 			if (page_num == 1){
-	// 				response.redirect('/');
-	// 			}else{
-	// 				// var data_num = results[0].count % 20;
-	// 				client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(page_num - 1) * MAXPOSTPERPAGE, page_num * MAXPOSTPERPAGE], function (error, results){
-	// 					response.send(ejs.render(data, {data: results, cur_page: page_num, pages: page_num}));
-	// 				});
-	// 			}
-	// 		});
-	// 	});
-	// }else 
 	if (request.param('page') > 0){
 		fs.readFile('index.html', 'utf8', function (error, data){
 			if (request.param('page') == 1){
@@ -93,7 +130,7 @@ app.get('/page=:page', function (request, response){
 						response.redirect('/');
 					}else{
 						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?, ?', [(request.param('page') - 1) * MAXPOSTPERPAGE, request.param('page') * MAXPOSTPERPAGE], function (error, results){
-							response.send(ejs.render(data, {data: results, cur_page: request.param('page'), pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+							response.send(ejs.render(data, {posts: results, cur_page: request.param('page'), pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
 						});
 					}
 				});
@@ -105,7 +142,6 @@ app.get('/page=:page', function (request, response){
 });
 
 app.get('/post=:id', function (request, response){
-	// Increase the number of inquiry on the selected post and save the inquiry number for each ip address.
 	client.query('SELECT COUNT(*) as count FROM user_info WHERE ip = ? && bbs_id = ?', [request.connection.remoteAddress, request.param('id')], function (error, results){
 		if (results[0].count == 0){
 			client.query('INSERT INTO user_info (ip, bbs_id) VALUES (?, ?)', [request.connection.remoteAddress, request.param('id')], function (error, results){
@@ -138,7 +174,7 @@ app.get('/post=:id', function (request, response){
 
 						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
 							client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
-								response.send(ejs.render(data, {data: results, post: apost[0], reply: replies, cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
+								response.send(ejs.render(data, {posts: results, post: apost[0], reply: replies, cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
 							});
 						});
 					});
@@ -147,37 +183,6 @@ app.get('/post=:id', function (request, response){
 		}
 	});
 });
-
-// new commment
-app.get('/insert', function (request, response) {
-	fs.readFile('insert.html', 'utf8', function (error, data) {
-		response.send(data);
-	});
-});
-
-app.post('/insert', function (request, response) {
-	var body = request.body;
-
-	var currentdate = new Date(); 
-	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
-				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-
-	console.log("Body : ");
-	console.log(body);
-	console.log("Date and Time" + datetime);
-	client.query('INSERT INTO bbs (category, title, is_new, inquiry_num, like_num, contents, time) values (?, ?, ?, ?, ?, ?, ?)',
-		[body.category, body.title, 1, 0, 0, body.contents, datetime],
-		function () {
-			response.redirect('/insert');
-	});
-});
-
-// app.post('/', function (request, response) {
-// 	console.log(request.body.search);
-// 	fs.readFile('index.html', 'utf8', function (error, data) {
-		
-// 	});
-// });
 
 app.post('/post_like', function (request, response){
 	if (request.body.url != "/"){
@@ -249,7 +254,9 @@ app.post('/reply', function (request, response){
 			if(error){
 				console.log(error);
 			}else{
-				response.redirect(request.get('referer'));
+				client.query('UPDATE bbs SET reply_num = reply_num + 1 WHERE id = ?', [post_id], function (error, results){
+					response.redirect(request.get('referer'));
+				});
 			}
 	});
 });
@@ -276,7 +283,9 @@ app.post('/replyofreply', function (request, response){
 			if(error){
 				console.log(error);
 			}else{
-				response.redirect(request.get('referer'));
+				client.query('UPDATE bbs SET reply_num = reply_num + 1 WHERE id = ?', [post_id], function (error, results){
+					response.redirect(request.get('referer'));
+				});
 			}
 	});
 });
@@ -292,7 +301,6 @@ app.post('/likeReply', function (request, response){
 			page_id = url[i].split("=")[1];
 		}
 	}
-
 	
 	client.query('SELECT COUNT(*) AS count FROM user_info WHERE ip = ? && reply_like_id = ?', [request.connection.remoteAddress, request.body.reply_id], function (error, result){
 		if (result[0].count == 0){
@@ -305,26 +313,57 @@ app.post('/likeReply', function (request, response){
 	});
 });
 
-app.post('/', function (request, response){
-	if (request.body.search != null){
-		// response.setEncoding('utf8');
-		response.redirect('/search=' + urlencode(request.body.search));
-	}
-});
+
 // app.post('/search=:keyword&page=:page&post=:post_num')
 
-app.get('/search=:keyword', function (request, response) {
-	// console.log(request.param('keyword'));
-	var key = request.param('keyword');
 
-	fs.readFile('index.html', 'utf8', function (error, data){
-		var data_num = 0;
-		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, row){
-			data_num = row[0].count;
+app.post('/post=:id', function (request, response){
+	response.redirect('/search=' + urlencode(request.body.search));
+});
 
-			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT 20", function (error, results){
-				response.send(ejs.render(data, {data: results, cur_page: 1, pages: Math.ceil(data_num / 20)}));
-			});
-		});
+app.get('/insert', function (request, response) {
+	fs.readFile('insert.html', 'utf8', function (error, data) {
+		response.send(data);
 	});
 });
+
+app.post('/insert', function (request, response) {
+	var body = request.body;
+
+	var currentdate = new Date(); 
+	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
+				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+	console.log("Body : ");
+	console.log(body);
+	console.log("Date and Time" + datetime);
+	client.query('INSERT INTO bbs (category, title, is_new, inquiry_num, like_num, contents, time, reply_num) values (?, ?, ?, ?, ?, ?, ?, ?)',
+		[body.category, body.title, 1, 0, 0, body.contents, datetime, 0],
+		function () {
+			response.redirect('/insert');
+	});
+});
+
+
+// CASES
+/*
+	CHECK LIST
+	DONE	CASE 0 : 	USER FIRSTLY ENTERED INDEX.HTML
+	
+	DONE 	CASE 1 : 	USER CLICKS A POST ON PAGE 1
+	DONE	CASE 1.1 : 	USER CLICKS A DIFFERENT PAGE ON THE POST SELECTED ABOVE
+	DONE	CASE 1.2 : 	USER CLICKS A DIFFERENT POST ON THE POST SELECTED ABOVE
+	DONE	CASE 1.3 : 	USER SEARCHES A POST ON THE POST SELECTED ABOVE
+	
+	DONE	CASE 2 : 	USER CLICKS A POST ON PAGE 2 OR ABOVE
+	CASE 2.1 : 	USER CLICKS A DIFFERENT PAGE ON THE POST SELECTED ABOVE
+	CASE 2.2 : 	USER CLICKS A DIFFERENT POST ON THE POST SELECTED ABOVE
+	CASE 2.3 : 	USER SEARCHES A POST ON THE POST SELECTED ABOVE
+
+	CASE 3 : 	USER SEARCHES A POST ON PAGE 1
+	CASE 3.1 : 	USER CLICKS A POST FROM THE SEARCHED POSTS
+	CASE 3.2 : 	USER CLICKS A DIFFERENT PAGE FROM THE SEARCHED POSTS
+	CASE 3.3 : 	USER CLICKS A POST FROM THE SEARCHED POSTS ON A DIFFERENT PAGE
+	
+	CASE 4 : USER SERACHES A POST ON PAGE 2 OR ABOVE
+*/

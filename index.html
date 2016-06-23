@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- <link href="./bootsrap/css/bootstrap.css" rel="stylesheet" type="text/css"/> -->
-	<link href="./css/index.css" rel="stylesheet" type="text/css">
+	<!-- <link href="./css/index.css" rel="stylesheet" type="text/css"> -->
 	<!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
 	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <style>
@@ -198,16 +198,16 @@ input[type=text]:focus {
 <body>
 
 <div id="header">
-<h1>IRICOM</h1>
+	<h1>IRICOM</h1>
 </div>
 
 <div id="header1">
 	<ul> 
-		<li><a class="active" href= "#home">전체보기</a></li>
-		<li><a href="#news">유머</a></li>
+		<li><a class="active" href= ""></a></li>
+		<!-- <li><a href="#news">유머</a></li>
 		<li><a href= "#Contact">연예</a></li>
 		<li><a href= "#about">정치</a></li>
-		<li><a href= "#about">동물</a></li>
+		<li><a href= "#about">동물</a></li> -->
 </div>
 
 <div id="section">
@@ -215,7 +215,7 @@ input[type=text]:focus {
 		<colgroup>
 			<col width="8%" />
 			<col width="*" />
-			<col width="5%" />
+			<!-- <col width="5%" /> -->
 			<col width="10%" />
 			<col width="5%" />
 			<col width="5%" />
@@ -224,7 +224,7 @@ input[type=text]:focus {
 			<tr>
 				<th scope="col">번호</th>
 				<th scope="col">제목</th>
-				<th scope="col">작성자</th>
+				<!-- <th scope="col">작성자</th> -->
 				<th scope="col">작성일</th>
 				<th scope="col">조회수</th>
 				<th scope="col">추천수</th>
@@ -232,14 +232,44 @@ input[type=text]:focus {
 		</thead>
 		<tbody>
 			
-			<% data.forEach(function (item, index){ %>
+			<% posts.forEach(function (item, index){ %>
 			<tr>
 				<td class="num"><%= item.id %></td>
-			 	<td class="title">
-				 	<a href="/post=<%= item.id %>"><%= item.title %></a>
-				 	<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
+				<td class="title">
+					<% if (cur_page == 1){
+						if (keyword == null){
+							%>
+							<a href="/post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+							<%
+						}else{
+							%>
+							<a href="/search=<%= keyword %>&post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+							<%
+						}
+					}else if (cur_page > 1){
+						if (keyword == null){
+						%>
+						<a href="/page=<%=cur_page%>&post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+						<%
+						}else{
+						%>
+						<a href="/search=<%=keyword%>&page=<%=cur_page%>&post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+						<%	
+						}
+					}%>
+					
+					<% 
+					var cur = new Date(); 
+
+					if (item.time.getFullYear() + "-" + item.time.getMonth() + "-" + item.time.getDate() ==
+						cur.getFullYear() + "-" + cur.getMonth() + "-" + cur.getDate()){
+						%> 
+						<img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
+						<%
+						}%>
+				 	
 			 	</td>
-			 	<td>IRICOM</td>
+			 	<!-- <td>IRICOM</td> -->
 			 	<td class="num"><%
 			 	var month = item.time.getMonth() + 1;
 			 	if (month < 10){
@@ -269,13 +299,13 @@ input[type=text]:focus {
 <br>
 
 <div class="paging"> 
-	<a href="/page=1" class="btn_arr first"><span class="hide"><<</span></a>
+	<a href="/page=1" class="btn_arr first"><span class="hide"><< INIT</span></a>
 
 	<%
 	if (cur_page > 1) {
-		%> <a href="/page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide"><</span></a> <%
+		%> <a href="/page=<%= cur_page - 1 %>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
 	}else{
-		%> <a href="/page=1%>" class="btn_arr prev"><span class="hide"><</span></a> <%
+		%> <a href="/page=1%>" class="btn_arr prev"><span class="hide">< PREV</span></a> <%
 	}
 	%>
 		
@@ -319,25 +349,25 @@ input[type=text]:focus {
 	<%
 	if (pages == 0){
 		%>
-		<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">></span></a> 
-		<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">>></span></a>
+		<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+		<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
 		<%
 	} else if (pages == 1) {
 		%>
-		<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">></span></a> 
-		<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">>></span></a>
+		<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
+		<a href="/page=<%= cur_page %>" class="btn_arr last"><span class="hide">LAST >></span></a>
 		<%
 	} else if (pages > 1) {
 		if (cur_page == pages){
 			%>
-			<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">></span></a> 
+			<a href="/page=<%= cur_page %>" class="btn_arr next"><span class="hide">NEXT ></span></a> 
 			<%
 		}else{
 			var nextpage = ++cur_page;
-			%> <a href="/page=<%= nextpage %>" class="btn_arr next"><span class="hide">></span></a>  <%
+			%> <a href="/page=<%= nextpage %>" class="btn_arr next"><span class="hide">NEXT ></span></a>  <%
 		}
 		%>
-		<a href="/page=<%= pages %>" class="btn_arr last"><span class="hide">>></span></a>
+		<a href="/page=<%= pages %>" class="btn_arr last"><span class="hide">LAST >></span></a>
 		<%
 	}
 	%>
