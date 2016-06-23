@@ -14,7 +14,7 @@ var urlencode = require('urlencode');
 var app = express();
 app.use(express.bodyParser());
 app.use(app.router);
-app.use('/css', express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 

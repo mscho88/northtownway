@@ -2,206 +2,14 @@
 <meta charset="utf-8" />
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- <link href="./bootsrap/css/bootstrap.css" rel="stylesheet" type="text/css"/> -->
-	<!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
-	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
-<style>
-#header {
-    
-    color:#cccccc;
-    padding:5px;
-    text-align:center;
-}
-#header1 {
-    background-color:#404040;
-    color:#cccccc;
-    padding:5px;
-    text-align:center;
-}
-#nav {
-    line-height:30px;
-    background-color:#eeeeee;
-    height:300px;
-    width:100px;
-    float:left;
-    padding:5px;
-}
-#section {
-    width:100%;
-    float:left;
-    
-}
-#footer {
-    background-color:#333333;
-    color:white;
-    clear:both;
-    text-align:center;
-    padding:5px;
-    position: relative;
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="./bootsrap/css/bootstrap.css" rel="stylesheet" type="text/css"/> -->
+    <link href="./css/post.css" rel="stylesheet" type="text/css">
 
-}
-
-a.serif {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    text-align:middle;
-    position: relative;
-    left: 50px;
-}
-body {
-    margin: 0;
-}
-
-
-ul{
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-li a {
-    float: left;
-}
-
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover:not(.active) {
-    background-color: #111;
-}
-
-#commentTable li {
-
-}
-
-ul.second-list-style {
-    background-color: white;
-}
-
-.active {
-    background-color: #4CAF50;
-}
-
-caption {
-    font-family:helvetica;
-    color: black;
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-.table_list {
-    font-family:helvetica;
-    width: 100%;
-    font-size: 12px;
-}
-.table_list thead tr th {
-    height: 35px;
-    background: #494949;
-    color: #fff;
-    font-weight: bold;
-}
-.table_list tbody tr td {
-    line-height: 35px;
-    border-bottom: 1px solid #c3c3c3;
-    text-align: center;
-}
-.table_list tbody tr td.num {
-    font-family: Helvetica;
-    font-size: 11px;
-    color: #737373;
-
-}
-.table_list tbody tr td.title {
-    text-align: left;
-}
-.table_list tbody tr td.title a {
-    display:block;
-    float:left;
-    text-decoration: none;
-    color: #191919;
-    max-width:320px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.table_list tbody tr td.title a:hover {
-    text-decoration: underline;
-}
-.table_list tbody tr td.title img {
-    display: block;
-    float: left;
-    margin-top: 10px;
-}
-
-input[type=text1] {
-    width: 130px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
-    background-image: url('http://i.imgur.com/vvbSbFD.png');
-    background-size:25px 25px;
-    background-position: 10px 10px; 
-    background-repeat: no-repeat;
-    padding: 12px 20px 12px 40px;
-    -webkit-transition: width 0.4s ease-in-out;
-    transition: width 0.4s ease-in-out;
-    
-}
-
-input[type=text1]:focus {
-    width: 100%;
-   }
-.paging .hide {
-    
-}
-.paging { 
-    padding:19px; text-align:center;
- }
- .paging a {
-    float:center;
-    padding: 4px;
-    margin-right:3px;
-    width:15px;
-    color:#000;
-    font: 12px helvetica;
-    border:1px solid #eee;
-    text-align: center;
-    text-decoration:none;
- }
- .paging a:hover {
-    color:#fff;
-    border:1px solid #f40;
-    background-color:#f40;
- }
- .paging .btn_arr{text-decoration:none;}
- .paging .btn_arr, .paging .on {
-    margin:0 3px; 
-    padding-top:0; 
-    border :1px  #ddd;
- }
- .paging .on {
-    padding-top:1px; 
-    height:22px; 
-    color:#000; 
-    background:#1
-
-}
-.container {
-    padding: 1cm 2cm;
-}
-</style>
+    <!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
+    <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 <body>
@@ -212,19 +20,19 @@ input[type=text1]:focus {
 </div>
 
 <div id="header1">
-	<ul id = "first"> 
-		<li><a ></a></li>
-		<!-- <li><a href="#news">유머</a></li>
-		<li><a href= "#Contact">연예</a></li>
-		<li><a href= "#about">정치</a></li>
-		<li><a href= "#about">동물</a></li> -->
-		
+    <ul id = "first"> 
+        <li><a ></a></li>
+        <!-- <li><a href="#news">유머</a></li>
+        <li><a href= "#Contact">연예</a></li>
+        <li><a href= "#about">정치</a></li>
+        <li><a href= "#about">동물</a></li> -->
+        
 </div>
 
 <div class="container">
-	<hr/>
-	<div class="row">
-		<div class="col-md-10">
+    <hr/>
+    <div class="row">
+        <div class="col-md-10">
             <table class="table table-dondensed">
                 <thead>
                     <tr align="center">
@@ -233,42 +41,43 @@ input[type=text1]:focus {
                 </thead>
             </table>
             <hr/>
-			<table class="table table-dondensed">
-				<tbody>
-					<tr>
-						<td>작성일
-						</td>
-						<td>
-						<%= post.time.getFullYear() + "-" + (post.time.getMonth() + 1) + "-" +post.time.getDate() + " " + post.time.getHours() + ":" + post.time.getMinutes() + ":" + post.time.getSeconds() %>
-						</td>
-					</tr>
-					<tr>
-						<td>조회
-						</td>
-						<td><span ><%= post.inquiry_num %></span>
-						</td>
-					</tr>
+            <table class="table table-dondensed">
+                <tbody>
+                    <tr>
+                        <td>작성일
+                        </td>
+                        <td>
+                        <%= post.time.getFullYear() + "-" + (post.time.getMonth() + 1) + "-" +post.time.getDate() + " " + post.time.getHours() + ":" + post.time.getMinutes() + ":" + post.time.getSeconds() %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>조회
+                        </td>
+                        <td><span ><%= post.inquiry_num %></span>
+                        </td>
+                    </tr>
                     <tr>
                         <td>추천 
                         </td>
                         <td><span ><%= post.like_num %></span>
                         </td>
                     </tr>
-					<tr>
-						<td colspan="2">
-							<p><%- post.contents %></p>
-						</td>
-					</tr>
                     <tr>
-                        <td colspan="2" align="center">
-                        <button name="btnLike" value="like" onclick="like()"> LIKE </button>
+                        <td colspan="2">
+                            <p><%- post.contents %></p>
                         </td>
                     </tr>
-				</tbody>
-			</table>
+                    <tr>
+                        <td colspan="2" align="center">
+                        <button img src = "name="btnLike" value="like" onclick="like()"> LIKE </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <hr/>
 
 <ul id="commentTable" class="second-list-style">
+ <img src = "http://i.imgur.com/zqW4Y4b.png" width="49" height="19">
     <%
     function printComment(item){
         var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 3 + '%;"' +
@@ -333,49 +142,49 @@ input[type=text1]:focus {
 </div>
 
 <div id="section">
-	<table class="table_list" summary="게시판" cellspacing="0">
-		<colgroup>
-			<col width="8%" />
-			<col width="*" />
-			<!-- <col width="5%" /> -->
-			<col width="10%" />
-			<col width="5%" />
-			<col width="5%" />
-		</colgroup>
-		<thead>
-			<tr>
-				<th scope="col">번호</th>
-				<th scope="col">제목</th>
-				<!-- <th scope="col">작성자</th> -->
-				<th scope="col">작성일</th>
-				<th scope="col">조회수</th>
-				<th scope="col">추천수</th>
-			</tr>
-		</thead>
-		<tbody>
-			
-			<% posts.forEach(function (item, index){ %>
-			<tr>
-				<td class="num"><%= item.id %></td>
-			 	<td class="title">
-				 	<% if (cur_page == 1){
+    <table class="table_list" summary="게시판" cellspacing="0">
+        <colgroup>
+            <col width="8%" />
+            <col width="*" />
+            <!-- <col width="5%" /> -->
+            <col width="10%" />
+            <col width="5%" />
+            <col width="5%" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <!-- <th scope="col">작성자</th> -->
+                <th scope="col">작성일</th>
+                <th scope="col">조회수</th>
+                <th scope="col">추천수</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <% posts.forEach(function (item, index){ %>
+            <tr>
+                <td class="num"><%= item.id %></td>
+                <td class="title">
+                    <% if (cur_page == 1){
                         if (keyword == null){
                             %>
-                            <a href="/post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+                            <a href="/post=<%= item.id %>"><%= item.title %> &nbsp;<% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
                             <%
                         }else{
                             %>
-                            <a href="/search=<%= keyword %>&post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+                            <a href="/search=<%= keyword %>&post=<%= item.id %>"><%= item.title %> &nbsp;<% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
                             <%
                         }
                     }else if (cur_page > 1){
                         if (keyword == null){
                         %>
-                        <a href="/page=<%=cur_page%>&post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+                        <a href="/page=<%=cur_page%>&post=<%= item.id %>"><%= item.title %> &nbsp;<% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
                         <%
                         }else{
                         %>
-                        <a href="/search=<%=keyword%>&page=<%=cur_page%>&post=<%= item.id %>"><%= item.title %> <% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
+                        <a href="/search=<%=keyword%>&page=<%=cur_page%>&post=<%= item.id %>"><%= item.title %> &nbsp;<% if (item.reply_num != 0) { %>[<%=item.reply_num%>]&nbsp;<% }%></a>
                         <%  
                         }
                     }%>
@@ -385,18 +194,18 @@ input[type=text1]:focus {
                     if (item.time.getFullYear() + "-" + item.time.getMonth() + "-" + item.time.getDate() ==
                         cur.getFullYear() + "-" + cur.getMonth() + "-" + cur.getDate()){
                         %>
-                        <img src="http://i.imgur.com/Yvbxouy.png" alt="Smiley face" width="20" height="20">
+                        <img src="http://i.imgur.com/y9yG0Ed.png" alt="Smiley face" width="9" height="9">
                         <%
                         }%>
-			 	</td>
-			 	<!-- <td>IRICOM</td> -->
-			 	<td class="num"><%= item.time.getFullYear() + "-" + (item.time.getMonth() + 1) + "-" +item.time.getDate() %></td>
-			 	<td class="num"><%= item.inquiry_num %></td>
-			 	<td class="num"><%= item.like_num %></td>
-		 	</tr>
-			<% });%>
-		</tbody>
-	</table><br>
+                </td>
+                <!-- <td>IRICOM</td> -->
+                <td class="num"><%= item.time.getFullYear() + "-" + (item.time.getMonth() + 1) + "-" +item.time.getDate() %></td>
+                <td class="num"><%= item.inquiry_num %></td>
+                <td class="num"><%= item.like_num %></td>
+            </tr>
+            <% });%>
+        </tbody>
+    </table><br>
 </div>
 
 <form method="post">
@@ -542,7 +351,6 @@ input[type=text1]:focus {
 </div>
 
 <script>
-
 function like(){
     $.ajax({
         url: "/post_like",
@@ -556,7 +364,6 @@ function like(){
     });
     location.reload();
 }
-
 function addComment(id, dimension) {
     var commentEditor = '<li style="list-style-type:none;margin-left:' + dimension + '%;"><table><tr id="commentEditor">'+
                             '<td>'+
@@ -578,7 +385,6 @@ function addComment(id, dimension) {
     $("#commentEditor").remove();
     $(commentEditor).insertAfter("#" + id);
 }
-
 function commitComment(id, dimension){
     var pName = $("#commentChildName");
     var pPassword = $("#commentChildPassword");
@@ -597,36 +403,29 @@ function commitComment(id, dimension){
         pText.focus();
         return;
     }
-
     $.ajax({
         url: "/replyofreply",
         type: "POST",
         data: {reply_id: id, dimension: dimension, name: pName.val(), password: pPassword.val(), contents: pText.val(), url: window.location.pathname},
         success: function (response) {
-
         },
         error: function (){
-
         }
     });
     location.reload();
 }
-
 function likeReply(id){
     $.ajax({
         url: "/likeReply",
         type: "POST",
         data: {reply_id: id, url: window.location.pathname},
         success: function (response){
-
         },
         error: function (){
-
         }
     });
     location.reload();
 }
-
 $(function(){
     $("#commentParentSubmit").click(function( event ) {
         var pName = $("#commentParentName");
@@ -662,8 +461,6 @@ $(function(){
         location.reload();
     });
 });
-
-
 </script>
 <div id="footer">
 Copyright &copy; INDEXPAGE.com
