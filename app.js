@@ -18,10 +18,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-var server = http.createServer(app);
-server.listen(80, function(){
-	console.log('Server running at http://159.203.40.110:52273');
-});
+// var server = http.createServer(app);
+app.listen(80);
+
 
 var MAXPOSTPERPAGE = 20;
 
