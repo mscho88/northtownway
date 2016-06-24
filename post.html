@@ -84,10 +84,35 @@
  <img src = "http://i.imgur.com/zqW4Y4b.png" width="49" height="19">
     <%
     function printComment(item){
+        var month = item.time.getMonth() + 1;
+        if (month < 10){
+            month = '0' + month;
+        }
+
+        var date = item.time.getDate();
+        if (date < 10){
+            date = '0' + date;
+        }
+
+        var hour = item.time.getHour();
+        if (hour < 10){
+            hour = '0' + hour;
+        }
+
+        var minute = item.time.getMinute();
+        if (minute < 10){
+            minute = '0' + minute;
+        }
+
+        var second = item.time.getSeconds();
+        if (second < 10){
+            second = '0' + second;
+        }
+        
         var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 3 + '%;"' +
         'id="' + item.id + '" name="commentParentCode"><hr/>' +
-        '<strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + item.time.getMonth() + '-' + item.time.getDate() + ' ' + item.time.getHours() + ':' + item.time.getMinutes() + ':' + item.time.getSeconds() + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
-        '<font size = "2">추천: ' +item.like_num + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
+        '<strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
+        '<font size = "2">추천: ' + item.like_num + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
         '<e style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천&nbsp;</e></font>' +
         '<e>' +  '</e></div>'+
         '<p>' +
