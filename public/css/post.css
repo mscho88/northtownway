@@ -61,7 +61,8 @@ li a {
 li a:hover:not(.active) {
     background-color: #111;
 }
-#commentTable li {
+#commentTable li:hover {
+    background-color: #ffff99;
 }
 ul.second-list-style {
     background-color: white;
@@ -92,13 +93,15 @@ caption {
     border-bottom: 1px solid #c3c3c3;
     text-align: center;
 }
-.table_list tbody tr td.num {
+.table_list tbody tr:hover td.num {
     font-family: Helvetica;
     font-size: 11px;
     color: #737373;
+    background-color: #ffff99;
 }
-.table_list tbody tr td.title {
+.table_list tbody tr:hover td.title {
     text-align: left;
+    background-color: #ffff99;
 }
 .table_list tbody tr td.title a {
     display:block;

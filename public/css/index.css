@@ -2,7 +2,7 @@
 #header {
 	
 	color:#4d4d4d;
-	padding:5px;
+	padding:20px;
 	text-align:center;
 }
 #header1 {
@@ -23,6 +23,10 @@
 	width:100%;
 	float:left;
 	padding:1cm 3cm;
+	
+}
+#title {
+	background: #555;
 }
 #footer {
 	background-color:#333333;
@@ -97,14 +101,15 @@ caption {
 	border-bottom: 1px solid #c3c3c3;
 	text-align: center;
 }
-.table_list tbody tr td.num {
+.table_list tbody tr:hover td.num {
 	font-family: Helvetica;
 	font-size: 11px;
 	color: #737373;
-
+	background-color: #ffff99;
 }
-.table_list tbody tr td.title {
+.table_list tbody tr:hover td.title {
 	text-align: left;
+	background-color: #ffff99;
 }
 .table_list tbody tr td.title a {
 	display:block;
@@ -178,3 +183,5 @@ input[type=text]:focus {
  	color:#000; 
  	background:#111;
  }
+
+
