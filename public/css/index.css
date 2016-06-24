@@ -105,11 +105,11 @@ caption {
 	font-family: Helvetica;
 	font-size: 11px;
 	color: #737373;
-	background-color: #ffff99;
+	background-color: #FFFFF1;
 }
 .table_list tbody tr:hover td.title {
 	text-align: left;
-	background-color: #ffff99;
+	background-color: #FFFFF1;
 }
 .table_list tbody tr td.title a {
 	display:block;

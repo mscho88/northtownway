@@ -48,6 +48,11 @@ ul{
     overflow: hidden;
     background-color: #333;
 }
+li {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 1px;
+}
 li a {
     float: left;
 }
@@ -61,8 +66,11 @@ li a {
 li a:hover:not(.active) {
     background-color: #111;
 }
+#comment_list{
+    padding: 10px;
+}
 #commentTable li:hover {
-    background-color: #ffff99;
+    background-color: #FFFFF2;
 }
 ul.second-list-style {
     background-color: white;
