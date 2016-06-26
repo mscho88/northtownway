@@ -103,13 +103,13 @@ caption {
 }
 .table_list tbody tr:hover td.num {
 	font-family: Helvetica;
-	font-size: 11px;
+	
 	color: #737373;
-	background-color: #FFFFF1;
+	background-color: #70FFAE;
 }
 .table_list tbody tr:hover td.title {
 	text-align: left;
-	background-color: #FFFFF1;
+	background-color: #70FFAE;
 }
 .table_list tbody tr td.title a {
 	display:block;
@@ -168,7 +168,7 @@ input[type=text]:focus {
  }
  .paging a:hover {
  	color:#fff;
- 	border:1px solid #f40;
+ 	/*border:1px solid #f40;*/
  	background-color:#f40;
  }
  .paging .btn_arr{text-decoration:none;}

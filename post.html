@@ -29,7 +29,6 @@
         <li><a href= "#Contact">연예</a></li>
         <li><a href= "#about">정치</a></li>
         <li><a href= "#about">동물</a></li> -->
-        
 </div>
 
 <div class="container">
@@ -83,10 +82,60 @@
             <hr/>
 
 <ul id="commentTable" class="second-list-style">
-    <img src = "http://i.imgur.com/zqW4Y4b.png" width="49" height="19">
+    <!-- BEST Comments -->
     <%
+        var best_replies = [];
+        reply.forEach(function(item, index){
+            if (best_replies.like_num > 10){
+                if (best_replies.length == 0){
+                    best_replies.push(item);
+                } else {
+                    if (best_replies[0].like_num < item.like_num){
+                        best_replies[0] = item;
+                    }
+                }
+            }
+        });
+        
+        if (best_replies.length > 0){
+            for(var i = 0; i < best_replies.length; i++){
+                var item = best_replies[i];
 
+                var month = item.time.getMonth() + 1;
+                if (month < 10){
+                    month = '0' + month;
+                }
+
+                var date = item.time.getDate();
+                if (date < 10){
+                    date = '0' + date;
+                }
+
+                var hour = item.time.getHours();
+                if (hour < 10){
+                    hour = '0' + hour;
+                }
+
+                var minute = item.time.getMinutes();
+                if (minute < 10){
+                    minute = '0' + minute;
+                }
+
+                var second = item.time.getSeconds();
+                if (second < 10){
+                    second = '0' + second;
+                }
+
+                var html = '<li style="list-style-type:none;background-color:#D3FFE6;"' +
+            'id=best:"' + item.id + '" name="commentParentCode">' + '<img src = "http://i.imgur.com/zqW4Y4b.png" width="49" height="19"><br>' +
+            '<strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
+            '<font size = "2">추천: ' + (item.like_num == null? 0 : item.like_num) + '<p>' + item.contents + '<br> </p> </li>';
+                %> <%- html %> <%
+            }
+        }
     %>
+
+    <!-- ADD Comments -->
     <%
     function printComment(item){
         var month = item.time.getMonth() + 1;
@@ -114,15 +163,16 @@
             second = '0' + second;
         }
         
-        var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 3 + '%;"' +
-        'id="' + item.id + '" name="commentParentCode"><hr>' +
-        '<strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
-        '<font size = "2">추천: ' + item.like_num + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
+        
+
+        var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 2 + '%;"' +
+        'id="' + item.id + '" name="commentParentCode"><table><tr><td valign="top" width="1">' + (item.dimension > 0 ? '<img src="http://i.imgur.com/SgcwFLS.png width="15" height="15"/>&nbsp;' : '') + '</td><td><div><strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
+        '<font size = "2">추천: ' + (item.like_num == null? 0 : item.like_num) + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
         '<e style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천&nbsp;</e></font>' +
         '<e>' +  '</e></div>'+
-        '<p>' +
+        '<p style="word-break:break-all;"><font size="2">' +
         item.contents +
-        '<br> </p> </li>';
+        '</font></p></div></td></table> </li>';
         return html;
     }
     

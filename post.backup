@@ -1,29 +1,44 @@
-<li style="list-style-type:none;margin-left:<%- parseInt(item.dimension) * 3%>%;" id="<%= item.id %>" name="commentParentCode">
-                <!-- <td style="width:0%"> </td> -->
+if (best_replies.length > 0){
+            for(int i = 0; i < best_replies.length; i++){
+                var item = best_replies[i];
 
-                <!-- <td colspan = 2> -->
-                    <strong> <%= item.name %> </strong>
-                    <a style="cursor:pointer;" onclick="addComment(<%= item.id %>, <%= item.dimension %>)" name="pAdd">답글</a>
-                    <!-- <a style="cursor:pointer;" onclick="eraseComment(<%= item.id %>)" name="pDel">삭제</a> -->
-                    <p>
-                        <%= item.contents %>
-                        <br>
-                    </p>
-                <!-- </td> -->
-            </li> <%  
-            var reply_id = item.id;
-            reply.forEach(function (innerItem, innerIndex){
-                if (innerItem.reply_id == item.id){
-                %>
-                    <li style="list-style-type:none;margin-left:<%- parseInt(innerItem.dimension * 3)%>%;" id="<%= innerItem.id %>" name="commentParentCode">
-                        <strong> <%= innerItem.name %> </strong>
-                        <a style="cursor:pointer;" onclick="addComment(<%= innerItem.id %>, <%= innerItem.dimension %>)" name="pAdd">답글</a>
-                        <!-- <a style="cursor:pointer;" onclick="eraseComment(<%= item.id %>)" name="pDel">삭제</a> -->
-                        <p>
-                            <%= innerItem.contents %>
-                            <br>
-                        </p>
-                    </li>
-                <%
+                var month = item.time.getMonth() + 1;
+                if (month < 10){
+                    month = '0' + month;
                 }
-            });
+
+                var date = item.time.getDate();
+                if (date < 10){
+                    date = '0' + date;
+                }
+
+                var hour = item.time.getHours();
+                if (hour < 10){
+                    hour = '0' + hour;
+                }
+
+                var minute = item.time.getMinutes();
+                if (minute < 10){
+                    minute = '0' + minute;
+                }
+
+                var second = item.time.getSeconds();
+                if (second < 10){
+                    second = '0' + second;
+                }
+
+                var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 3 + '%;"' +
+            'id="' + item.id + '" name="commentParentCode"><hr>' +
+            '<strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
+            '<font size = "2">추천: ' + item.like_num + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
+            '<e style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천&nbsp;</e></font>' +
+            '<e>' +  '</e></div>'+
+            '<p>' +
+            item.contents +
+            '<br> </p> </li>';
+                %>
+                <img src = "http://i.imgur.com/zqW4Y4b.png" width="49" height="19">
+                <%= html %>
+                <%
+            }
+        }

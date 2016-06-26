@@ -19,7 +19,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 // var server = http.createServer(app);
-app.listen(80);
+app.listen(52273);
 
 
 var MAXPOSTPERPAGE = 20;
@@ -338,12 +338,22 @@ app.post('/likeReply', function (request, response){
 			page_id = url[i].split("=")[1];
 		}
 	}
-	
+
 	client.query('SELECT COUNT(*) AS count FROM user_info WHERE ip = ? && reply_like_id = ?', [request.connection.remoteAddress, request.body.reply_id], function (error, result){
-		if (result[0].count == 0){
-			client.query('UPDATE reply SET like_num = like_num + 1 WHERE id = ?', [request.body.reply_id], function (error, result){
-				if (!error){
-					response.redirect(request.get('referer'));
+		if(result[0].count != 0){
+			console.log("ip address (%s) liked the same reply id = %d", request.connection.remoteAddress, request.body.reply_id);
+		} else if (result[0].count == 0){
+			client.query('INSERT INTO user_info (ip, bbs_id, reply_like_id) VALUES (?, ?, ?)', [request.connection.remoteAddress, post_id, request.body.reply_id], function (error, result){
+				if(error){
+					console.log('Failed to like the reply id = ', request.body.reply_id);
+				}else{
+					client.query('UPDATE reply SET like_num = like_num + 1 WHERE id = ?', [request.body.reply_id], function (error, result){
+						if (error){
+							console.log("Failed to update increase like number for reply id = %d", request.body.reply_id);
+						}else{
+							response.redirect(request.get('referer'));
+						}
+					});
 				}
 			});
 		}
@@ -397,6 +407,32 @@ app.post('/', function (request, response){
 	}else if (request.body.search != null){
 		response.redirect('/search=' + urlencode(request.body.search));
 	}
+});
+
+app.get('/insert&post=:id', function (request, response){
+	fs.readFile('insert.html', 'utf8', function (error, data){
+		client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')], function (error, apost){
+			response.send(ejs.render(data, {post: apost}));
+		});
+		
+	});
+});
+
+app.get('/insert&post=:id', function (request, response){
+	var body = request.body;
+
+	var currentdate = new Date(); 
+	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
+				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
+
+	console.log("Body : ");
+	console.log(body);
+	console.log("Date and Time" + datetime);
+	client.query('UPDATE bbs SET category = ?, title = ?, is_new = ?, inquiry_num = ?, like_num = ?, contents = ?, time = ?, reply_num = ?',
+		[body.category, body.title, 1, 0, 0, body.contents, datetime, 0],
+		function () {
+			response.redirect('/insert');
+	});
 });
 
 app.get('/insert', function (request, response) {
