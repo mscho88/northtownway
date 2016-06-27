@@ -18,8 +18,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// var server = http.createServer(app);
+var server = http.createServer(app);
 app.listen(80);
+// server.listen(52273, '0.0.0.0', function(){
+// 	console.log("started");
+// });
 
 
 var MAXPOSTPERPAGE = 20;

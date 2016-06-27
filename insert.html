@@ -5,6 +5,10 @@
 	<script src="./ckeditor/ckeditor.js"></script>
 	<link rel = "icon" href = "http://i.imgur.com/7GHfqub.png"/>
     <!-- Visit http://ckeditor.com/ for more information. -->
+    <script src="./editor/nicEdit.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	bkLib.onDomLoaded(function() { new nicEditor({fullPanel : true}).panelInstance('textarea'); });
+	</script>
 </head>
 <body>
 	<h1>Administrator Insert Page</h1>
@@ -36,27 +40,14 @@
 				
 					<td><label>Contents</label></td>
 					<td>
-                    <!-- form>
-                        <textarea name="contents" id="editor1" rows="10" cols="80">
-                            This is my textarea to be replaced with CKEditor.
-                        </textarea>
-                        <script>
-                            // Replace the <textarea id="editor1"> with a CKEditor instance, using default configuration.
-                            CKEDITOR.replace( 'editor1' );
-                        </script>
-                    </form> -->
                     <div id="sample">
-                        <script type="text/javascript" src="http://js.nicedit.com/nicEdit-latest.js"></script> <script type="text/javascript">
-                        //<![CDATA[
-                        bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
-                        //]]>
-                        </script>
-                        <textarea name="contents" cols="150" rows="30" value="333"><% if(insert != null){%> <%= post[0].contents %><%}%></textarea>
+						<textarea name="contents" cols="150" rows="30" maxlength="1000" id="textarea">
+							<% if(insert != null){%> <%= post[0].contents %><%}%>
+						</textarea>
                     </div>
                     </td>
 				</tr>
 				<tr>
-                    <!-- TODO : Need to do input validation on server side to check whether the password is correct. -->
 					<td><label>Password</label></td>
 					<td><input type="password" name="password" maxlength="50" size="50"></td>
 				</tr>				
@@ -64,5 +55,29 @@
 			<input type="submit" />
 		</fieldset>
 	</form>
+	<table style="margin:10px">
+		<tr>
+			<td>
+			HOW TO ADD VIDEO 
+		</td>
+		</tr>
+		<tr>
+			<td>
+				&lt;iframe width="420" height="345" src="https://www.youtube.com/embed/i6njAxMWunE"/&gt;
+			<td>
+		</tr>
+		<tr>
+			<td>
+			HOW TO ADD BGM 
+			</td>
+		</tr>
+		<tr>
+			<td>
+				&lt;embed src="http://player.bgmstore.net/88tmY" allowscriptaccess="always" allowfullscreen="true" width="422" height="180"/&gt;
+			<td>
+		</tr>
+		<tr height="100">
+		</tr>
+	</table>
 </body>
-</html>
+</html>	
