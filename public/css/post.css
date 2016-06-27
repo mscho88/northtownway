@@ -70,7 +70,7 @@ li a:hover:not(.active) {
     padding: 10px;
 }
 #commentTable li:hover {
-    background-color: #FFFFF2;
+    background-color: #D8FFE9;
 }
 ul.second-list-style {
     background-color: white;
@@ -103,13 +103,12 @@ caption {
 }
 .table_list tbody tr:hover td.num {
     font-family: Helvetica;
-    font-size: 11px;
     color: #737373;
-    background-color: #ffff99;
+    background-color: #70FFAE;
 }
 .table_list tbody tr:hover td.title {
     text-align: left;
-    background-color: #ffff99;
+    background-color: #70FFAE;
 }
 .table_list tbody tr td.title a {
     display:block;
@@ -167,7 +166,6 @@ input[type=text1]:focus {
  }
  .paging a:hover {
     color:#fff;
-    border:1px solid #f40;
     background-color:#f40;
  }
  .paging .btn_arr{text-decoration:none;}

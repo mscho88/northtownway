@@ -11,6 +11,7 @@
     <!--jQuery (부비스트랩의 자바스크립트 플러그인을 위해 필요한)-->
     <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
     <script src="./script/post.js"></script>
+    <link rel = "icon" href = "http://i.imgur.com/7GHfqub.png"/>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
@@ -49,7 +50,32 @@
                         <td><font size="2">작성일</font>
                         </td>
                         <td><font size="2">
-                        <%= post.time.getFullYear() + "-" + (post.time.getMonth() + 1) + "-" +post.time.getDate() + " " + post.time.getHours() + ":" + post.time.getMinutes() + ":" + post.time.getSeconds() %>
+                            <%
+                            var month = post.time.getMonth() + 1;
+                            if (month < 10){
+                                month = '0' + month;
+                            }
+
+                            var date = post.time.getDate();
+                            if (date < 10){
+                                date = '0' + date;
+                            }
+
+                            var hour = post.time.getHours();
+                            if (hour < 10){
+                                hour = '0' + hour;
+                            }
+
+                            var minute = post.time.getMinutes();
+                            if (minute < 10){
+                                minute = '0' + minute;
+                            }
+
+                            var second = post.time.getSeconds();
+                            if (second < 10){
+                                second = '0' + second;
+                            }%>
+                        <%= post.time.getFullYear() + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second %>
                         </font>
                         </td>
                     </tr>
@@ -167,12 +193,12 @@
 
         var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 2 + '%;"' +
         'id="' + item.id + '" name="commentParentCode"><table><tr><td valign="top" width="1">' + (item.dimension > 0 ? '<img src="http://i.imgur.com/SgcwFLS.png width="15" height="15"/>&nbsp;' : '') + '</td><td><div><strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + 
-        '<font size = "2">추천: ' + (item.like_num == null? 0 : item.like_num) + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
+        '<font size = "2">추천: ' + (item.like_num == null? 0 : item.like_num) + '</font><td><div align="right"><font size = "2"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
         '<e style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천&nbsp;</e></font>' +
-        '<e>' +  '</e></div>'+
+        '</div></td></tr><tr><td></td><td colspan="2">'+
         '<p style="word-break:break-all;"><font size="2">' +
         item.contents +
-        '</font></p></div></td></table> </li>';
+        '</font></p></div></td></tr></table> </li>';
         return html;
     }
     
@@ -207,7 +233,7 @@
                 </div>
 
                 </p>
-            <textarea id="commentParentText" class="form-control col-lg-12" style="width:100%" rows="4"></textarea>
+            <textarea id="commentParentText" class="form-control col-lg-12" style="width:100%" rows="4" maxlength="1000"></textarea>
             </span>
         </td>
     </tr>
@@ -272,7 +298,7 @@
                         <%  
                         }
                     }%>
-                    <% 
+                    <%
                     var cur = new Date(); 
 
                     if (item.time.getFullYear() + "-" + item.time.getMonth() + "-" + item.time.getDate() ==
@@ -283,7 +309,32 @@
                         }%>
                 </td>
                 <!-- <td>IRICOM</td> -->
-                <td class="num"><%= item.time.getFullYear() + "-" + (item.time.getMonth() + 1) + "-" +item.time.getDate() %></td>
+                <%
+                    var month = item.time.getMonth() + 1;
+                    if (month < 10){
+                        month = '0' + month;
+                    }
+
+                    var date = item.time.getDate();
+                    if (date < 10){
+                        date = '0' + date;
+                    }
+
+                    var hour = item.time.getHours();
+                    if (hour < 10){
+                        hour = '0' + hour;
+                    }
+
+                    var minute = item.time.getMinutes();
+                    if (minute < 10){
+                        minute = '0' + minute;
+                    }
+
+                    var second = item.time.getSeconds();
+                    if (second < 10){
+                        second = '0' + second;
+                    }%>
+                <td class="num"><%= item.time.getFullYear() + "-" + month + "-" + date %></td>
                 <td class="num"><%= item.inquiry_num %></td>
                 <td class="num"><%= item.like_num %></td>
             </tr>

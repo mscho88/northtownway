@@ -3,6 +3,7 @@
 <head>
 	<title>Administrator Insert Page</title>
 	<script src="./ckeditor/ckeditor.js"></script>
+	<link rel = "icon" href = "http://i.imgur.com/7GHfqub.png"/>
     <!-- Visit http://ckeditor.com/ for more information. -->
 </head>
 <body>
@@ -14,14 +15,22 @@
 				<tr>
                     <td><label>Category</label></td>
                     <td>
-                        <input type="radio" name="category" value="humor" checked> humor
+                		<input type="radio" name="category" value="humor" checked> humor
                         <input type="radio" name="category" value="celebrity"> celebrity
-    					<input type="radio" name="category" value="politics"> politics
+    					<input type="radio" name="category" value="politics"> politics                        
 					</td>
 				</tr>	
 				<tr>
 					<td><label>Title</label></td>
-					<td><input type="text" name="title" maxlength="50" size="115"></td>
+					<td><% if (insert == null){
+							%>
+							<input type="text" name="title" maxlength="50" size="115"></td>
+							<%
+						}else{
+							%>
+							<input type="text" name="title" maxlength="50" size="115" value="<%= post[0].title %>"></td>
+							<%
+						}%>
 				</tr>
 				<tr>
 				
@@ -42,7 +51,7 @@
                         bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
                         //]]>
                         </script>
-                        <textarea name="contents" cols="150" rows="30"></textarea>
+                        <textarea name="contents" cols="150" rows="30" value="333"><% if(insert != null){%> <%= post[0].contents %><%}%></textarea>
                     </div>
                     </td>
 				</tr>

@@ -412,13 +412,12 @@ app.post('/', function (request, response){
 app.get('/insert&post=:id', function (request, response){
 	fs.readFile('insert.html', 'utf8', function (error, data){
 		client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')], function (error, apost){
-			response.send(ejs.render(data, {post: apost}));
+			response.send(ejs.render(data, {insert: 1, post: apost}));
 		});
-		
 	});
 });
 
-app.get('/insert&post=:id', function (request, response){
+app.post('/insert&post=:id', function (request, response){
 	var body = request.body;
 
 	var currentdate = new Date(); 
@@ -428,16 +427,19 @@ app.get('/insert&post=:id', function (request, response){
 	console.log("Body : ");
 	console.log(body);
 	console.log("Date and Time" + datetime);
-	client.query('UPDATE bbs SET category = ?, title = ?, is_new = ?, inquiry_num = ?, like_num = ?, contents = ?, time = ?, reply_num = ?',
-		[body.category, body.title, 1, 0, 0, body.contents, datetime, 0],
-		function () {
-			response.redirect('/insert');
+	client.query('SELECT * FROM bbs WHERE id = ?', [reqeust.param('id')], function (error, apost){
+		client.query('UPDATE bbs SET category = ?, title = ?, is_new = ?, inquiry_num = ?, like_num = ?, contents = ?, time = ?, reply_num = ? WHERE id = ?',
+			[body.category, body.title, apost[0].is_new, apost[0].inquiry_num, apost[0],like_num, body.contents, datetime, 0, request.param('id')],
+			function () {
+				response.redirect('/post=' + request.param('id'));
+		});
 	});
 });
+	
 
 app.get('/insert', function (request, response) {
 	fs.readFile('insert.html', 'utf8', function (error, data) {
-		response.send(data);
+		response.send(ejs.render(data, {insert: null}));
 	});
 });
 
