@@ -429,7 +429,7 @@ app.post('/insert&post=:id', function (request, response){
 	console.log("Date and Time" + datetime);
 	client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')], function (error, apost){
 		client.query('UPDATE bbs SET category = ?, title = ?, is_new = ?, inquiry_num = ?, like_num = ?, contents = ?, time = ?, reply_num = ? WHERE id = ?',
-			[body.category, body.title, apost[0].is_new, apost[0].inquiry_num, apost[0],like_num, body.contents, datetime, 0, request.param('id')],
+			[body.category, body.title, apost[0].is_new, apost[0].inquiry_num, apost[0].like_num, body.contents, datetime, 0, request.param('id')],
 			function () {
 				response.redirect('/post=' + request.param('id'));
 		});
