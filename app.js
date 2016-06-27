@@ -19,7 +19,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 // var server = http.createServer(app);
-app.listen(52273);
+app.listen(80);
 
 
 var MAXPOSTPERPAGE = 20;
