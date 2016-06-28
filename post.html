@@ -274,8 +274,19 @@
         <tbody>
             
             <% posts.forEach(function (item, index){ %>
-            <tr>
-                <td class="num"><%= item.id %></td>
+            
+                <%if (item.id == post.id){
+                    %>
+                    <tr bgcolor="#70FFAE">
+                    <td class="num">⋙</td>
+                    <%
+                }else{
+                    %>
+                    <tr>
+                    <td class="num"><%= item.id %></td>
+                    <%
+                }%>
+                
                 <td class="title">
                     <% if (cur_page == 1){
                         if (keyword == null){
