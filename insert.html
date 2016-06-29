@@ -80,4 +80,22 @@
 		</tr>
 	</table>
 </body>
+<script>
+function insert(){
+    $.ajax({
+        url: "/post_like",
+        type: "POST",
+        data: {like: 'yes', url: window.location.pathname},
+        success: function(response) {
+             // console.log(returned); // here can get the return of route
+        },
+        error: function(error) {
+            if(error.responseText == 'AlreadyLiked'){
+                alert("You already liked this post.");
+            }
+        }
+    });
+    location.reload();
+}
+</script>
 </html>	

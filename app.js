@@ -227,6 +227,7 @@ app.get('/post=:id', function (request, response){
 app.post('/post_like', function (request, response){
 	if (request.body.url != "/"){
 		var url = request.body.url.split("/")[1].split("&");
+
 		// console.log(url);
 		var post_num = null;
 		var page_num = null;
@@ -252,21 +253,21 @@ app.post('/post_like', function (request, response){
 							}
 						});
 					});
+					fs.readFile('post.html', 'utf8', function (error, data){
+						if (parseInt(post_num) != null && page_num != null){
+
+						}else if (parseInt(post_num) != null && page_num == null){
+							response.redirect('/post=' + parseInt(post_num));
+							// response.redirect(request.get('referer'));
+						}else{
+							response.redirect('/');
+						}
+					});
+				}else{
+					response.send(500, 'AlreadyLiked');
 				}
-
 			}
-		});
-
-		fs.readFile('post.html', 'utf8', function (error, data){
-			if (parseInt(post_num) != null && page_num != null){
-
-			}else if (parseInt(post_num) != null && page_num == null){
-				response.redirect('/post=' + parseInt(post_num));
-				// response.redirect(request.get('referer'));
-			}else{
-				response.redirect('/');
-			}
-		});
+		});		
 	}else{
 		response.redirect('/');
 	}
@@ -345,6 +346,7 @@ app.post('/likeReply', function (request, response){
 	client.query('SELECT COUNT(*) AS count FROM user_info WHERE ip = ? && reply_like_id = ?', [request.connection.remoteAddress, request.body.reply_id], function (error, result){
 		if(result[0].count != 0){
 			console.log("ip address (%s) liked the same reply id = %d", request.connection.remoteAddress, request.body.reply_id);
+			response.send(500, 'AlreadyLiked');
 		} else if (result[0].count == 0){
 			client.query('INSERT INTO user_info (ip, bbs_id, reply_like_id) VALUES (?, ?, ?)', [request.connection.remoteAddress, post_id, request.body.reply_id], function (error, result){
 				if(error){
@@ -448,7 +450,9 @@ app.get('/insert', function (request, response) {
 
 app.post('/insert', function (request, response) {
 	var body = request.body;
-
+	// if (request.body.password != "Qmffor01"){
+	// 	response.send(500, 'WrongPassword');
+	// }
 	var currentdate = new Date(); 
 	var datetime = currentdate.getFullYear() + "-" + (currentdate.getMonth() + 1) + "-" + (currentdate.getDate())  + " "
 				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();

@@ -6,7 +6,10 @@ function like(){
         success: function(response) {
              // console.log(returned); // here can get the return of route
         },
-        error: function() {
+        error: function(error) {
+            if(error.responseText == 'AlreadyLiked'){
+                alert("You already liked this post.");
+            }
         }
     });
     location.reload();
@@ -56,7 +59,8 @@ function commitComment(id, dimension){
         data: {reply_id: id, dimension: dimension, name: pName.val(), password: pPassword.val(), contents: pText.val(), url: window.location.pathname},
         success: function (response) {
         },
-        error: function (){
+        error: function (erorr){
+
         }
     });
     location.reload();
@@ -68,7 +72,10 @@ function likeReply(id){
         data: {reply_id: id, url: window.location.pathname},
         success: function (response){
         },
-        error: function (){
+        error: function (error){
+            if(error.responseText == 'AlreadyLiked'){
+                alert("You already liked this comment.");
+            }
         }
     });
     location.reload();
