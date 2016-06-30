@@ -115,10 +115,10 @@ app.get('/search=:keyword&post=:id', function (request, response) {
 		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
 			var post_num = post_num[0].count;
 
-			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?" [MAXPOSTPERPAGE], function (error, posts){
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?", [MAXPOSTPERPAGE], function (error, posts){
 				client.query("SELECT * FROM bbs WHERE id = ?", [request.param('id')], function (error, apost){
 					client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
-						response.send(ejs.render(data, {posts: posts, post: apost[0], reply: replies, keyword: key, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE)}))
+						response.send(ejs.render(data, {posts: posts, post: apost[0], reply: replies, keyword: key, cur_page: 1, pages: Math.ceil(post_num / MAXPOSTPERPAGE)}))
 					});
 				});
 			});
@@ -131,8 +131,8 @@ app.get('/search=:keyword', function (request, response) {
 	fs.readFile('index.html', 'utf8', function (error, data){
 		client.query("SELECT COUNT(*) count FROM bbs WHERE title LIKE '%"+key+"%'", function (error, post_num){
 			var post_num = post_num[0].count;
-			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT 20", function (error, posts){
-				response.send(ejs.render(data, {posts: posts, keyword: key, cur_page: 1, pages: Math.ceil(post_num / 20)}));
+			client.query("SELECT * FROM bbs WHERE title LIKE '%"+key+"%' ORDER BY id DESC LIMIT ?", [MAXPOSTPERPAGE], function (error, posts){
+				response.send(ejs.render(data, {posts: posts, keyword: key, cur_page: 1, pages: Math.ceil(post_num / MAXPOSTPERPAGE)}));
 			});
 		});
 	});
