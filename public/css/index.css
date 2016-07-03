@@ -225,9 +225,7 @@ input[type=text]:focus {
 }
 
 
-@media screen and(min-width: 300px) (max-width: 600px) {
-
-
+@media screen and (min-width:300px) and (max-width: 1000px) {
 #header {
     color:#4d4d4d;
     padding:20px;
