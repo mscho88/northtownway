@@ -81,19 +81,34 @@ function likeReply(id){
     location.reload();
 }
 
-// $(function() {
-//     $("#post_content img, .resizablebox").each(function() {
-//         var oImgWidth = $(this).width();
-//         var oImgHeight = $(this).height();
-//         // alert(oImgWidth + "= " + oImgHeight);
-//         $(this).css({
-//             'max-width':oImgWidth+'px',
-//             'max-height':'auto',
-//             'width':'100%',
-//             'height':'100%'
-//         });
-//     });
-// });
+$(function() {
+    $("#post_content_table img, .resizablebox").each(function() {
+        // var oImgWidth = $(this).width();
+        // var oImgHeight = $(this).height();
+        var winWidth = $(window).width();
+        var winHeight = $(window).height();
+        // alert(winWidth + "= " + winHeight);
+
+        var ratio = (winWidth * 0.8) / $(this).width();
+        // alert(ratio);
+        console.log(ratio);
+        if (ratio < 1){
+            $(this).css({
+                'min-width':parseInt($(this).width() * ratio)+'px',
+                'min-height':parseInt($(this).height() * ratio)+'px',
+                'width':'100%',
+                'height':'100%'
+            });
+        }
+
+        // $(this).css({
+        //     'max-width':parseInt(oImgWidth * 0.6)+'px',
+        //     'max-height':parseInt(oImgHeight * 0.6)+'px',
+        //     'width':'100%',
+        //     'height':'100%'
+        // });
+    });
+});
 
 $(function(){
 
