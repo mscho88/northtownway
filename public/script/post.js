@@ -91,13 +91,11 @@ $(function() {
 
         var ratio = (winWidth * 0.8) / $(this).width();
         // alert(ratio);
-        console.log(ratio);
+        // console.log(ratio);
         if (ratio < 1){
             $(this).css({
-                'min-width':parseInt($(this).width() * ratio)+'px',
-                'min-height':parseInt($(this).height() * ratio)+'px',
-                'width':'100%',
-                'height':'100%'
+                'width':parseInt($(this).width() * ratio)+'px',
+                'height':parseInt($(this).height() * ratio)+'px'
             });
         }
 
