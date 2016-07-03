@@ -85,7 +85,7 @@ $(function() {
     $("#post_content img, .resizablebox").each(function() {
         var oImgWidth = $(this).width();
         var oImgHeight = $(this).height();
-        alert(oImgWidth + "= " + oImgHeight);
+        // alert(oImgWidth + "= " + oImgHeight);
         $(this).css({
             'max-width':oImgWidth+'px',
             'max-height':'auto',
