@@ -19,11 +19,12 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 var server = http.createServer(app);
-// app.listen(80);
-server.listen(52273, '0.0.0.0', function(){
-	console.log("started");
+app.listen(80, function(){
+	console.log("Start IRICOM server on port 80");
 });
-
+// server.listen(52273, '0.0.0.0', function(){
+// 	console.log("started");
+// });
 
 var MAXPOSTPERPAGE = 20;
 
@@ -145,7 +146,7 @@ app.get('/page=:page&post=:id', function (request, response){
 			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_count){
 				var post_num = post_count[0].count;
 				client.query('SELECT * FROM bbs WHERE id = ?', [request.param('id')],  function (error, apost){
-					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+					client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?', [MAXPOSTPERPAGE], function (error, results){
 						client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
 							response.send(ejs.render(data, {posts: posts, keyword: null, reply: replies, cur_page: request.param('page'), pages: Math.ceil(post_num / MAXPOSTPERPAGE), post: apost[0]}));
 						});
@@ -212,7 +213,7 @@ app.get('/post=:id', function (request, response){
 					client.query('SELECT COUNT(*) AS count FROM bbs', function (error, results){
 						var data_num = results[0].count;
 
-						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT 20', function (error, results){
+						client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?', [MAXPOSTPERPAGE], function (error, results){
 							client.query('SELECT * FROM reply WHERE bbs_id = ?', [request.param('id')], function (error, replies){
 								response.send(ejs.render(data, {posts: results, keyword: null, post: apost[0], reply: replies, cur_page: 1, pages: Math.ceil(data_num / MAXPOSTPERPAGE)}));
 							});
