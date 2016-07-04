@@ -216,12 +216,12 @@
         
 
         var html = '<li style="list-style-type:none;margin-left:' + parseInt(item.dimension) * 2 + '%;"' +
-        'id="' + item.id + '" name="commentParentCode"><table><tr><td valign="top" width="1">' + (item.dimension > 0 ? '<img src="http://i.imgur.com/MTRq6us.png" width="20" height="15"/>&nbsp;' : '') + '</td><td><div><strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + '<font size = "2">추천: ' + (item.like_num == null? 0 : item.like_num) + '<div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
-        '<e style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천&nbsp;</e></font>' +
-        '<e>' +  '</e></div>'+
+        'id="' + item.id + '" name="commentParentCode"><table><tr><td valign="top" width="1">' + (item.dimension > 0 ? '<img src="http://i.imgur.com/MTRq6us.png" width="20" height="15"/>' : '') + '</td><td><div><strong>' + item.name + '</strong>' + '&nbsp;<font size="1">' +  '&nbsp;&nbsp;' + item.time.getFullYear() + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second + '&nbsp;(' + item.ip.split('.')[0] + '.***' + '.***.' + item.ip.split('.')[3] + ')</font>&nbsp;' + '<font size = "2">추천: ' + (item.like_num == null? 0 : item.like_num) + '</font></td><td><font size = "2"><div align="right"><e style="cursor:pointer;" onclick="addComment(' + item.id + ',' + item.dimension + ')" name="pAdd">&nbsp;답글&nbsp;</e>' +
+        '<e style="cursor:pointer;" onclick="likeReply(' + item.id + ')" name="pAdd">추천&nbsp;</e></font></td>' +
+        '<e>' +  '</e></div><tr><td></td><td colspan="2">'+
         '<p style="word-break:break-all;"><font size="2">' +
         item.contents +
-        '</font></p></div></td></table> </li>';
+        '</font></p></div></td></tr></table> </li>';
         return html;
     }
     
