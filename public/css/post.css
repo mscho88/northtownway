@@ -223,11 +223,6 @@ input[type=text1]:focus {
     border-radius: 100%;
     
 }
-#table-contents img {
-    width:80%;
-    height:auto;
-}
-
 
 @media (min-width: 420px) {
     .pagination li, 
@@ -278,6 +273,7 @@ input[type=text1]:focus {
     padding:1cm 0px;
     
 }
+
 #title {
     background: #555;
 }
@@ -473,6 +469,13 @@ input[type=text]:focus {
     border-radius: 50%;
     
 }
+
+
+#table-contents img {
+    width:80%;
+    height:auto;
+}
+
 @media (min-width: 300px) {
     #paging{
     font-size: 10px;
@@ -492,5 +495,6 @@ input[type=text]:focus {
 
 
 }
+
 }
 

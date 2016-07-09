@@ -12,20 +12,19 @@ var client = require('mysql').createConnection({
 	database: 'northtownway'
 });
 var urlencode = require('urlencode');
-
 var app = express();
-// app.use(express.bodyParser());
-app.use(bodyParser()); 
 
+// app.use(express.bodyParser());
 // app.use(app.router);
+app.use(bodyParser()); 
 app.use(express.static(path.join(__dirname, 'public')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-var server = http.createServer(app);
 // app.listen(80, function(){
 // 	console.log("Start IRICOM server on port 80");
 // });
+var server = http.createServer(app);
 server.listen(52273, '0.0.0.0', function(){
 	console.log("started");
 });
@@ -35,12 +34,16 @@ var MAXPOSTPERPAGE = 20;
 app.get('/', function (request, response) {
 	// This is the first page when an user enters the webpage
 	fs.readFile('index.html', 'utf8', function (error, data){
-		client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_num){
-			var post_num = post_num[0].count;
-			client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?', [MAXPOSTPERPAGE], function (error, posts){
-				response.send(ejs.render(data, {posts: posts, keyword: null, cur_page: 1, pages: Math.ceil(post_num / MAXPOSTPERPAGE)}));
+		if (error){
+
+		}else{
+			client.query('SELECT COUNT(*) AS count FROM bbs', function (error, post_num){
+				var post_num = post_num[0].count;
+				client.query('SELECT * FROM bbs ORDER BY id DESC LIMIT ?', [MAXPOSTPERPAGE], function (error, posts){
+					response.send(ejs.render(data, {posts: posts, keyword: null, cur_page: 1, pages: Math.ceil(post_num / MAXPOSTPERPAGE)}));
+				});
 			});
-		});
+		}
 	});
 });
 
@@ -328,7 +331,7 @@ app.post('/replyofreply', function (request, response){
 				+ currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 
 	client.query('INSERT INTO reply (bbs_id, name, password, contents, time, ip, reply_id, dimension, like_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-		[post_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress, request.body.reply_id, request.body.dimension, 02],
+		[post_id, request.body.name, request.body.password, request.body.contents, datetime, request.connection.remoteAddress, request.body.reply_id, request.body.dimension, 0],
 		function (error, results){
 			if(error){
 				console.log(error);
