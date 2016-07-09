@@ -21,13 +21,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// app.listen(80, function(){
-// 	console.log("Start IRICOM server on port 80");
-// });
-var server = http.createServer(app);
-server.listen(52273, '0.0.0.0', function(){
-	console.log("started");
+app.listen(80, function(){
+	console.log("Start IRICOM server on port 80");
 });
+var server = http.createServer(app);
+// server.listen(52273, '0.0.0.0', function(){
+// 	console.log("started");
+// });
 
 var MAXPOSTPERPAGE = 20;
 
